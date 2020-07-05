@@ -25,9 +25,7 @@ namespace Subscriber.Data
 
         public async Task<UserFileModel> GetUserFileById(Guid userCardId)
         {
-            var x = new User { Email = "hhh", Password = "esther45" };
-            _userDbContext.Add(x);
-            _userDbContext.SaveChanges();
+
             UserFile file = await _userDbContext.UserFiles
                             .Where(file => file.Id == userCardId)
                             .FirstOrDefaultAsync();
@@ -80,9 +78,27 @@ namespace Subscriber.Data
             
         }
 
-/*        public bool Register(RegisterModel userRegister)
+        public async Task<UserModel> AddUserAsync(UserModel user)
         {
-            throw new NotImplementedException();
-        }*/
+            User userToAdd = _mapper.Map<User>(user);
+            _userDbContext.Users.Add(userToAdd);
+            await _userDbContext.SaveChangesAsync();
+            return _mapper.Map<UserModel>(userToAdd);
+        }
+        public async Task<UserFileModel> AddUserFileAsync(UserFileModel userFileSubscriber)
+        {
+            UserFile userToAdd = _mapper.Map<UserFile>(userFileSubscriber);
+            _userDbContext.UserFiles.Add(userToAdd);
+            await _userDbContext.SaveChangesAsync();
+            return _mapper.Map<UserFileModel>(userToAdd);
+
+        }
+
+
+
+        public bool CheckExists(UserModel userRegister)
+        {
+            return _userDbContext.Users.Any(u => u.Email == userRegister.Email);
+        }
     }
 }

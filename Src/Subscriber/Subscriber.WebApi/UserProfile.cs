@@ -13,11 +13,25 @@ namespace Subscriber.WebApi
     {
         public UserProfile()
         {
-            this.CreateMap<UserModel, User>()
+            CreateMap<UserModel, User>()
                 .ReverseMap();
-            this.CreateMap<UserFileModel, UserFile>()
+           CreateMap<UserFileModel, UserFile>()
                 .ReverseMap();
-            this.CreateMap<UserFileModel, UserFileDTO>();
+           CreateMap<UserFileModel, UserFileDTO>();
+
+            CreateMap<SubscriberDTO, UserModel>()
+                .ReverseMap()
+                 .ForMember(dest => dest.Height, opt => opt.Ignore());
+
+            var map = CreateMap<SubscriberDTO, UserFileModel>();
+            map.ForAllMembers(opt => opt.Ignore());
+            map.ForMember(dest => dest.Height, opt => opt.MapFrom(src => src.Height));
+
+            CreateMap<UserFileModel, UserFile>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ReverseMap();
+            CreateMap<UserModel, User>()
+                .ReverseMap();
         }
     }
 }

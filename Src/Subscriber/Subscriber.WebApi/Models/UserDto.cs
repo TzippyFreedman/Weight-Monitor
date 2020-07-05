@@ -9,7 +9,7 @@ namespace Subscriber.WebApi.Models
     {
         public string FirstName { get; set; }
         public int LastName { get; set; }
-        //unique
+
         public string Email { get; set; }
         public string Password { get; set; }
     }

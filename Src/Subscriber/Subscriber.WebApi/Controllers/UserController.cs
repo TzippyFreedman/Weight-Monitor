@@ -10,6 +10,8 @@ using Subscriber.Services;
 using Subscriber.Services.Models;
 using Subscriber.WebApi.Models;
 using Microsoft.AspNetCore.Routing;
+using Serilog;
+
 namespace Subscriber.WebApi.Controllers
 {
     [ApiController]
@@ -24,6 +26,30 @@ namespace Subscriber.WebApi.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<bool>> Register(SubscriberDTO userRegister)
+        {
+
+            UserModel userToRegister = _mapper.Map<UserModel>(userRegister);
+            UserFileModel userFileToRegister = _mapper.Map<UserFileModel>(userRegister);
+            UserModel userAdded = await _userService.RegisterAsync(userToRegister, userFileToRegister);
+            if (userAdded == null)
+            {
+                Log.Information("User with email {@email} requested to create but already exists", userAdded.Email);
+                throw new Exception("Bad Request: Patient with email ${ userAdded.Email } requested to create but already exists");
+                //   throw new HttpResponseException(HttpStatusCode.NotFound);
+                // return BadRequest($"patient with id:{newPatient.PatientId} already exists");
+            }
+
+
+
+
+            else
+            {
+                Log.Information("User with email {@email} created successfully", userAdded.Email);
+                return StatusCode((int)HttpStatusCode.Created);
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult<Guid>> Login(LoginDTO userLogin)

@@ -35,6 +35,38 @@ namespace Subscriber.Services
 
         }
 
+        public async Task<UserModel> RegisterAsync(UserModel user, UserFileModel userFile)
+        {
+            if (!_userRepository.CheckExists(user))
+            {
+                UserModel userAdded = await _userRepository.AddUserAsync(user);
+                if (userAdded != null)
+                {
+                    userFile.UserId = userAdded.Id;
+                    UserFileModel userFileAdded = await _userRepository.AddUserFileAsync(userFile);
+                    if (userFileAdded != null)
+                    {
+                        return userAdded;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+        }
+
+
+
 
     }
 }
