@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Subscriber.Data
 {
-    class UserRepository
+    public class UserRepository
     {
+        
     }
 }
