@@ -4,7 +4,10 @@ using System.Text;
 
 namespace Subscriber.Services
 {
-   public class UserService
+    interface IUserRepository
     {
+        bool register(Register userRegister);
+
+        int login(Login userRegister);
     }
 }

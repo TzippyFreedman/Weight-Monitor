@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Subscriber.Services.Models
+namespace Subscriber.Data.Entities
 {
-   public class RegisterModel
+   public class Register
     {
         public Guid Id { get; private set; }
 
