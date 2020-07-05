@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Subscriber.Services
+namespace Subscriber.Data
 {
-   public class UserService
+   public class UserRepository
     {
     }
 }

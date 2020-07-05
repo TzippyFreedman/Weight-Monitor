@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Subscriber.Services.Models
 {
-    public class Login
+    public class LoginModel
     {
         public string Password { get; set; }
         public string Email { get; set; }

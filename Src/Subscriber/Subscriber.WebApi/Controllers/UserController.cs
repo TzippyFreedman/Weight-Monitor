@@ -15,18 +15,18 @@ namespace Subscriber.WebApi.Controllers
 
 
         [HttpPost]
-        public bool register(UserRegisterDTO userRegister)
+        public bool register(RegisterDTO userRegister)
         {
             return true;
         }
         [HttpPost]
-        public int login(UserRegisterDTO userRegister)
+        public int login(RegisterDTO userRegister)
         {
 
             return 1;
         }
         [HttpGet]
-        public int get(UserRegisterDTO userRegister)
+        public int get(RegisterDTO userRegister)
         {
 
             return 1;

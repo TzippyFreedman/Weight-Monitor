@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Subscriber.Services.Models
 {
-   public class UserRegister
+   public class RegisterModel
     {
         public Guid Id { get; private set; }
 
@@ -13,6 +13,6 @@ namespace Subscriber.Services.Models
         //uniqe
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Height { get; set; }
+        public int Height { get; set; }
     }
 }

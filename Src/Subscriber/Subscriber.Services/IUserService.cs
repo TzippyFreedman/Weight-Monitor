@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Subscriber.Services
 {
-    interface IUserService
+  public  interface IUserService
     {
-        bool register(UserRegister userRegister);
+         bool register(RegisterModel userRegister);
 
-        int login(UserRegister userRegister);
+         int login(LoginModel userRegister);
 
 
     }
