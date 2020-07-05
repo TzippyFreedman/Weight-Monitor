@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Subscriber.Services.Models
+namespace Subscriber.WebApi.Models
 {
-   public class RegisterModel
+    public class UserDto
     {
-        public Guid Id { get; private set; }
-
         public string FirstName { get; set; }
         public int LastName { get; set; }
-        //uniqe
+        //unique
         public string Email { get; set; }
         public string Password { get; set; }
-        public int Height { get; set; }
     }
 }

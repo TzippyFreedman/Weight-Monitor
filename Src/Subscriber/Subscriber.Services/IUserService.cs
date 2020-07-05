@@ -2,15 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Subscriber.Services
 {
-    interface IUserService
+  public interface IUserService
     {
-        bool register(RegisterModel userRegister);
 
-        int login(RegisterModel userRegister);
-
-
+        Task<Guid> LoginAsync(string Email, string Password);
+        Task<UserFileModel> GetUserFileById(Guid userCardId);
     }
 }

@@ -10,7 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Subscriber.Data;
 using Subscriber.Services;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using Subscriber.WebApi.Middlewares;
 
 namespace Subscriber.WebApi
 {
@@ -28,6 +32,13 @@ namespace Subscriber.WebApi
         {
             //per request
             services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
+            services.AddAutoMapper(typeof(Startup));
+
+            services.AddDbContext<UserDbContext>
+                (options => options
+                .UseSqlServer(Configuration.GetConnectionString("weightMonitorDBConnectionString")));
+
 
             services.AddControllers();
 
@@ -40,6 +51,7 @@ namespace Subscriber.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseErrorHandlingMiddleware();
 
             app.UseHttpsRedirection();
 
