@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Subscriber.Services.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Subscriber.Services
 {
-    interface IUserRepository
+    public interface IUserRepository
     {
-        bool register(Register userRegister);
+        Task<UserModel> AddUserAsync(UserModel userRegister);
 
-        int login(Login userRegister);
+        int Login(LoginModel userRegister);
+        bool CheckExists(UserModel userRegister);
+        Task<UserFileModel> AddUserFileAsync(UserFileModel userFileSubscriber);
     }
 }
