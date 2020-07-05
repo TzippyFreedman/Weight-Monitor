@@ -7,9 +7,9 @@ namespace Subscriber.Services
 {
     interface IUserService
     {
-        bool register(UserRegister userRegister);
+        bool register(Register userRegister);
 
-        int login(UserRegister userRegister);
+        int login(Register userRegister);
 
 
     }

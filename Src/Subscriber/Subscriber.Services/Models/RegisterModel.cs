@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Subscriber.Services.Models
 {
-   public class UserRegister
+   public class Register
     {
         public Guid Id { get; private set; }
 
