@@ -8,12 +8,13 @@ namespace Subscriber.Services
 {
    public interface IUserRepository
     {
-        bool CheckExists(UserModel userRegister);
+        bool CheckExists(string emailAddress);
         Task<UserFileModel> AddUserFileAsync(UserFileModel userFileSubscriber);
         Task<UserModel> AddUserAsync(UserModel userRegister);
 
         Task<UserModel> LoginAsync(string email, string password);
         Task<Guid> GetUserFileIdByUserId(Guid id);
         Task<UserFileModel> GetUserFileById(Guid userCardId);
+        Task AddVertificationCodeToUser(string emailAddress, Guid vertificationCode);
     }
 }

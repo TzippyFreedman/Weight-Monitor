@@ -31,9 +31,9 @@ namespace Subscriber.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             //per request
-/*            services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-            services.AddAutoMapper(typeof(Startup));*/
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<UserDbContext>
                 (options => options

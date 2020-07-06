@@ -11,5 +11,6 @@ namespace Subscriber.Services
         Task<UserModel> RegisterAsync(UserModel userRegister, UserFileModel userFileModel);
         Task<Guid> LoginAsync(string Email, string Password);
         Task<UserFileModel> GetUserFileById(Guid userCardId);
+        Task VerifyUserAsync(string emailAddress);
     }
 }

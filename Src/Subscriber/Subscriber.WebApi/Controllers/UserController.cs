@@ -66,6 +66,14 @@ namespace Subscriber.WebApi.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task VerifyUser(string emailAddress)
+        {
+
+             await _userService.VerifyUserAsync(emailAddress);
+           
+        }
+
         [HttpGet]
         [Route("{userCardId:Guid}")]
         public async Task<ActionResult<UserFileDTO>> GetUserFileById(Guid userCardId)

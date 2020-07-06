@@ -39,6 +39,9 @@ namespace Subscriber.Data
             modelBuilder.Entity<User>()
                          .Property(u => u.FirstName)
                            .IsRequired();
+            modelBuilder.Entity<User>()
+                      .Property(u => u.IsVerified)
+                         .IsRequired();
 
             modelBuilder.Entity<User>()
                         .Property(u => u.Password)

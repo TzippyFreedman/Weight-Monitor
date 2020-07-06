@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+
 
 namespace Subscriber.Data
 {
@@ -62,7 +64,11 @@ namespace Subscriber.Data
 
         public async Task<UserModel> LoginAsync(string email, string password)
         {
-            User user = await _userDbContext.Users.Where(user =>
+
+
+
+                
+        User user = await _userDbContext.Users.Where(user =>
                        user.Email == email && user.Password == password)
                         .FirstOrDefaultAsync();
 
@@ -95,9 +101,19 @@ namespace Subscriber.Data
 
 
 
-        public bool CheckExists(UserModel userRegister)
+        public bool CheckExists(string emailAddress)
         {
-            return _userDbContext.Users.Any(u => u.Email == userRegister.Email);
+            return _userDbContext.Users.Any(u => u.Email == emailAddress);
+        }
+
+        public async Task AddVertificationCodeToUser(string emailAddress, Guid activationCode)
+        {
+/*            User user = _userDbContext.Users
+                    .Where(user => user.Email == emailAddress)
+                    .FirstOrDefault();
+            user.ActivationCode = activationCode;
+
+          await  _userDbContext.SaveChangesAsync();*/
         }
     }
 }
