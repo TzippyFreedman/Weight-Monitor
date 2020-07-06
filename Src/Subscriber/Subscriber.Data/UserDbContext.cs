@@ -23,7 +23,7 @@ namespace Subscriber.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-        modelBuilder
+           modelBuilder
                 .UseEncryption(_provider);
             modelBuilder.Entity<User>()
                 .ToTable("User");
