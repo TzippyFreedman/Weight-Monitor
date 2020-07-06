@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 using Subscriber.Services;
 using Subscriber.Services.Models;
 using Subscriber.WebApi.Models;
+using Microsoft.AspNetCore.Routing;
+using Serilog;
 
 namespace Subscriber.WebApi.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
+    [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-
-        public UserController(IUserService userService,IMapper mapper)
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -35,7 +35,7 @@ namespace Subscriber.WebApi.Controllers
             UserModel userAdded = await _userService.RegisterAsync(userToRegister, userFileToRegister);
             if (userAdded == null)
             {
-                  Log.Information("User with email {@email} requested to create but already exists", userAdded.Email);
+                Log.Information("User with email {@email} requested to create but already exists", userAdded.Email);
                 throw new Exception("Bad Request: Patient with email ${ userAdded.Email } requested to create but already exists");
                 //   throw new HttpResponseException(HttpStatusCode.NotFound);
                 // return BadRequest($"patient with id:{newPatient.PatientId} already exists");
@@ -50,17 +50,35 @@ namespace Subscriber.WebApi.Controllers
                 return StatusCode((int)HttpStatusCode.Created);
             }
         }
+
         [HttpPost]
-        public int Login(SubscriberDTO userRegister)
+        public async Task<ActionResult<Guid>> Login(LoginDTO userLogin)
         {
 
-            return 1;
+            Guid patientCardId = await _userService.LoginAsync(userLogin.Email, userLogin.Password);
+            if (patientCardId.Equals(Guid.Empty))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                return patientCardId;
+            }
         }
+
         [HttpGet]
-        public int Get(SubscriberDTO userRegister)
+        [Route("{userCardId:Guid}")]
+        public async Task<ActionResult<UserFileDTO>> GetUserFileById(Guid userCardId)
         {
 
-            return 1;
+            UserFileModel file = await _userService.GetUserFileById(userCardId);
+            if (file == null)
+            {
+                return NoContent();
+            }
+            
+
+            return _mapper.Map<UserFileDTO>(file);
         }
 
     }

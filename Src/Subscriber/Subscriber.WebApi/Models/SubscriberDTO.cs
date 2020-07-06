@@ -8,7 +8,6 @@ namespace Subscriber.WebApi.Models
 {
     public class SubscriberDTO
     {
-        //public Guid Id { get; private set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -17,7 +16,6 @@ namespace Subscriber.WebApi.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public int Height { get; set; }
-
 
 
     }

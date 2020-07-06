@@ -2,18 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Subscriber.Data;
 using Subscriber.Services;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using Subscriber.WebApi.Middlewares;
 
 namespace Subscriber.WebApi
 {
@@ -30,12 +31,14 @@ namespace Subscriber.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             //per request
-            services.AddScoped(typeof(IUserService), typeof(UserService));
+/*            services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-            services.AddDbContext<UserContext>(options => options.UseSqlServer
-            (Configuration.GetConnectionString("UserDBConnectionStringTzippy")));
+            services.AddAutoMapper(typeof(Startup));*/
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddDbContext<UserDbContext>
+                (options => options
+                .UseSqlServer(Configuration.GetConnectionString("weightMonitorDBConnectionString")));
+
 
             services.AddControllers();
 
@@ -48,6 +51,7 @@ namespace Subscriber.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseErrorHandlingMiddleware();
 
             app.UseHttpsRedirection();
 

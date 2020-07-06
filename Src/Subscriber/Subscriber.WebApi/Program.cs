@@ -12,26 +12,24 @@ using Serilog;
 
 namespace Subscriber.WebApi
 {
-    
     public class Program
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-              .SetBasePath(Directory.GetCurrentDirectory())
-              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-              .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-              .Build();
-        public static async Task Main(string[] args)
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .Build();
+        public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                 .CreateLogger();
+               .ReadFrom.Configuration(Configuration)
+                .CreateLogger();
 
-        Serilog.Debugging.SelfLog.Enable(msg =>
+            Serilog.Debugging.SelfLog.Enable(msg =>
             {
                 Debug.Print(msg);
                 Debugger.Break();
             });
-
             try
             {
                 Log.Information("The program has started!!!");
@@ -39,16 +37,13 @@ namespace Subscriber.WebApi
                 CreateHostBuilder(args).Build().Run();
 
 
-}
+            }
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Host terminated unexpectedly");
             }
             finally
             {
-                /* await endpointInstance.Stop()
-                   .ConfigureAwait(false);
-                */
                 Log.CloseAndFlush();
             }
         }

@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Subscriber.Services
 {
-  public  interface IUserService
+  public interface IUserService
     {
-         Task<UserModel> RegisterAsync(UserModel userRegister,UserFileModel userFileModel);
-
-         int Login(LoginModel userRegister);
-
-
+        Task<UserModel> RegisterAsync(UserModel userRegister, UserFileModel userFileModel);
+        Task<Guid> LoginAsync(string Email, string Password);
+        Task<UserFileModel> GetUserFileById(Guid userCardId);
     }
 }

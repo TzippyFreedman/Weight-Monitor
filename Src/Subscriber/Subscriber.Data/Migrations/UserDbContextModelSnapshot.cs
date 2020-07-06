@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Subscriber.Data;
 
 namespace Subscriber.Data.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20200705122730_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(UserDbContext))]
+    partial class UserDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +27,7 @@ namespace Subscriber.Data.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
@@ -45,8 +44,7 @@ namespace Subscriber.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -64,7 +62,9 @@ namespace Subscriber.Data.Migrations
                         .HasDefaultValue(0f);
 
                     b.Property<float>("Height")
-                        .HasColumnType("real");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
 
                     b.Property<DateTime>("OpenDate")
                         .ValueGeneratedOnAdd()

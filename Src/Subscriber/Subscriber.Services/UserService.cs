@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Subscriber.Services.Models;
+﻿using Subscriber.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,27 +8,43 @@ namespace Subscriber.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _pathRepository;
-
-        public UserService(IUserRepository pathRepository)
+        private readonly IUserRepository _userRepository;
+        public UserService(IUserRepository userRepository)
         {
-            _pathRepository = pathRepository;
-        }
-        public int Login(LoginModel userRegister)
-        {
-            throw new NotImplementedException();
+            _userRepository = userRepository;
         }
 
-        public async Task<UserModel> RegisterAsync(UserModel user,UserFileModel userFile)
+        public async Task<UserFileModel> GetUserFileById(Guid userCardId)
         {
-          if(!  _pathRepository.CheckExists(user))
+            return await _userRepository.GetUserFileById(userCardId);
+        }
+
+        public async Task<Guid> LoginAsync(string email, string password)
+        {
+            UserModel user = await _userRepository.LoginAsync(email, password);
+
+            if (user == null)
             {
-                UserModel userAdded = await _pathRepository.AddUserAsync(user);
+                return Guid.Empty;
+            }
+            else
+            {
+                Guid userFileId = await _userRepository.GetUserFileIdByUserId(user.Id);
+                return userFileId;
+            }
+
+        }
+
+        public async Task<UserModel> RegisterAsync(UserModel user, UserFileModel userFile)
+        {
+            if (!_userRepository.CheckExists(user))
+            {
+                UserModel userAdded = await _userRepository.AddUserAsync(user);
                 if (userAdded != null)
                 {
-                    userFile.SubscriberId = userAdded.Id;
-                    UserFileModel userFileAdded= await  _pathRepository.AddUserFileAsync(userFile);
-                    if(userFileAdded!=null)
+                    userFile.UserId = userAdded.Id;
+                    UserFileModel userFileAdded = await _userRepository.AddUserFileAsync(userFile);
+                    if (userFileAdded != null)
                     {
                         return userAdded;
                     }
@@ -47,9 +62,11 @@ namespace Subscriber.Services
             }
 
 
-           
+
         }
 
-       
+
+
+
     }
 }
