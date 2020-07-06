@@ -13,6 +13,8 @@ namespace Subscriber.WebApi.Middlewares
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+
+
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -22,7 +24,14 @@ namespace Subscriber.WebApi.Middlewares
         {
             try
             {
+
                 await _next(context);
+                //if (context.Response.StatusCode == 400)
+                //{
+                //     context.Response.Clear();
+                //     context.Response.WriteAsync("bad request");
+
+                //}
 
             }
             catch (Exception ex)
@@ -34,7 +43,10 @@ namespace Subscriber.WebApi.Middlewares
         private async static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;
-
+            //if (ex is PatientNotExistExcption)
+            //{
+            //    code = HttpStatusCode.NoContent;
+            //}
 
 
 

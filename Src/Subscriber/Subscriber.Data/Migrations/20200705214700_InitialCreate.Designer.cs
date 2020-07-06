@@ -9,8 +9,8 @@ using Subscriber.Data;
 
 namespace Subscriber.Data.Migrations
 {
-    [DbContext(typeof(UserContext))]
-    [Migration("20200705122730_InitialCreate")]
+    [DbContext(typeof(UserDbContext))]
+    [Migration("20200705214700_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +29,7 @@ namespace Subscriber.Data.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
@@ -45,8 +46,7 @@ namespace Subscriber.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -64,7 +64,9 @@ namespace Subscriber.Data.Migrations
                         .HasDefaultValue(0f);
 
                     b.Property<float>("Height")
-                        .HasColumnType("real");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
 
                     b.Property<DateTime>("OpenDate")
                         .ValueGeneratedOnAdd()

@@ -64,7 +64,6 @@ namespace Subscriber.Data
         {
             User user = await _userDbContext.Users.Where(user =>
                        user.Email == email && user.Password == password)
-                .Include(user=> user.UserFile)
                         .FirstOrDefaultAsync();
 
             if (user != null)

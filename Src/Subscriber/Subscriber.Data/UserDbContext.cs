@@ -41,8 +41,8 @@ namespace Subscriber.Data
                            .IsRequired();
 
             modelBuilder.Entity<User>()
-           .Property(u => u.Password)
-           .IsRequired();
+                        .Property(u => u.Password)
+                        .IsRequired();
             modelBuilder.Entity<UserFile>()
                       .Property(userfile => userfile.Id)
                       .HasDefaultValueSql("NEWID()");

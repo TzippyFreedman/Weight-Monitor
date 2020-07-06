@@ -11,11 +11,11 @@ namespace Subscriber.Data.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
+                    FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: true)
+                    Password = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,7 +26,7 @@ namespace Subscriber.Data.Migrations
                 name: "UserFile",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     OpenDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     BMI = table.Column<float>(nullable: false, defaultValue: 0f),
                     Height = table.Column<float>(nullable: false, defaultValue: 0f),
