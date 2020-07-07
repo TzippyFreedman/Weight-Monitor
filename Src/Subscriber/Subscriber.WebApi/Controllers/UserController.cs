@@ -31,16 +31,13 @@ namespace Subscriber.WebApi.Controllers
         {
 
             UserModel userToRegister = _mapper.Map<UserModel>(userRegister);
-
             UserFileModel userFileToRegister = _mapper.Map<UserFileModel>(userRegister);
-
             UserModel userAdded = await _userService.RegisterAsync(userToRegister, userFileToRegister);
-
             if (userAdded == null)
             {
-                Log.Information("User with email {@email} requested to create but already exists", userAdded.Email);
-                throw new Exception("Bad Request: Patient with email ${ userAdded.Email } requested to create but already exists");
-
+                Log.Information("User with email {@email} requested to create but already exists", userRegister.Email);
+                throw new Exception("Bad Request: Patient with email ${ userRegister.Email } requested to create but already exists");
+                //   throw new HttpResponseException(HttpStatusCode.NotFound);
                 // return BadRequest($"patient with id:{newPatient.PatientId} already exists");
             }
 
@@ -67,14 +64,6 @@ namespace Subscriber.WebApi.Controllers
             {
                 return patientCardId;
             }
-        }
-
-        [HttpPost]
-        public async Task VerifyUser(string emailAddress)
-        {
-
-             await _userService.VerifyUserAsync(emailAddress);
-           
         }
 
         [HttpGet]
