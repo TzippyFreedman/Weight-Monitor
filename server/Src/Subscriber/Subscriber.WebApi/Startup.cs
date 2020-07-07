@@ -37,7 +37,7 @@ namespace Subscriber.WebApi
 
             services.AddDbContext<UserDbContext>
                 (options => options
-                .UseSqlServer(Configuration.GetConnectionString("weightMonitorDBConnectionString")));
+                .UseSqlServer(Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString")));
 
 
             services.AddControllers();

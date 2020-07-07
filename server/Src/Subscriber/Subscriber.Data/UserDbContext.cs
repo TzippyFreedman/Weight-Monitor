@@ -48,10 +48,12 @@ namespace Subscriber.Data
                         .IsRequired();
             modelBuilder.Entity<UserFile>()
                       .Property(userfile => userfile.Id)
-                      .HasDefaultValueSql("NEWID()");
+                      .HasDefaultValueSql("NEWID()")
+                      .ValueGeneratedOnAdd();
             modelBuilder.Entity<UserFile>()
                          .Property(userfile => userfile.OpenDate)
-                         .HasDefaultValueSql("getdate()");
+                         .HasDefaultValueSql("getdate()")
+                         .ValueGeneratedOnAdd();
             modelBuilder.Entity<UserFile>()
                         .Property(userfile => userfile.Weight)
                         .HasDefaultValue(0);
@@ -64,7 +66,8 @@ namespace Subscriber.Data
 
             modelBuilder.Entity<UserFile>()
                         .Property(userfile => userfile.UpdateDate)
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("getdate()")
+                        .ValueGeneratedOnAddOrUpdate();
             modelBuilder.Entity<UserFile>()
                         .ToTable("UserFile");
 

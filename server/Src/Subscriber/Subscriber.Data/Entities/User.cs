@@ -18,7 +18,7 @@ namespace Subscriber.Data.Entities
         public string Password { get; set; }
 
         public bool IsVerified { get; set; }
-        public Guid ActivationCode { get; set; }
+        public string ActivationCode { get; set; }
         public virtual UserFile UserFile { get; set; }
     }
 }

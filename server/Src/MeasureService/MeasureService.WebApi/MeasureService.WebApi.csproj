@@ -4,5 +4,23 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+    <PackageReference Include="NServiceBus" Version="7.3.0" />
+    <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.0.1" />
+    <PackageReference Include="NServiceBus.Persistence.Sql" Version="6.0.1" />
+    <PackageReference Include="NServiceBus.RabbitMQ" Version="5.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MeasureService.Data\MeasureService.Data.csproj" />
+    <ProjectReference Include="..\MeasureService.Services\MeasureService.Services.csproj" />
+  </ItemGroup>
+
 
 </Project>
