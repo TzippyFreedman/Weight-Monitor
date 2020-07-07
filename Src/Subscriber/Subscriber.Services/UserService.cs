@@ -16,9 +16,9 @@ namespace Subscriber.Services
             _userRepository = userRepository;
         }
 
-        public async Task<UserFileModel> GetUserFileById(Guid userCardId)
+        public async Task<UserFileModel> GetUserFileById(Guid userFileId)
         {
-            return await _userRepository.GetUserFileById(userCardId);
+            return await _userRepository.GetUserFileById(userFileId);
         }
 
         public async Task<Guid> LoginAsync(string email, string password)
