@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Messages.Commands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -30,15 +31,17 @@ namespace MeasureService.WebApi
             .UseNServiceBus(context =>
             {
 
-                const string endpointName = "WeightMonitor.Measure";
+                const string endpointName = "WeightMonitor.Measure.Api";
                 var endpointConfiguration = new EndpointConfiguration(endpointName);
 
                 endpointConfiguration.EnableInstallers();
 
-                endpointConfiguration.AuditProcessedMessagesTo("audit");
+               // endpointConfiguration.AuditProcessedMessagesTo("audit");
 
-/*                endpointConfiguration.AuditSagaStateChanges(
-          serviceControlQueue: "Particular.Servicecontrol");*/
+                /*                endpointConfiguration.AuditSagaStateChanges(
+                          serviceControlQueue: "Particular.Servicecontrol");*/
+
+
 
 
                 var recoverability = endpointConfiguration.Recoverability();
@@ -48,6 +51,19 @@ namespace MeasureService.WebApi
                 outboxSettings.KeepDeduplicationDataFor(TimeSpan.FromDays(6));
                 outboxSettings.RunDeduplicationDataCleanupEvery(TimeSpan.FromMinutes(15));
 
+                var auditQueue = Configuration["AppSettings:auditQueue"];
+                //var auditQueue = appSettings.Get("auditQueue");
+                // var serviceControlQueue = appSettings.Get("ServiceControlQueue");
+                var serviceControlQueue = Configuration["AppSettings:ServiceControlQueue"];
+
+                var timeToBeReceivedSetting = Configuration["AppSettings:timeToBeReceived"];
+                var subscriberEndpoint = Configuration["AppSettings:SubscriberEndpoint"];
+                var transportConnection = Configuration.GetConnectionString("transportConnection");
+                //var timeToBeReceivedSetting = appSettings.Get("timeToBeReceived");
+                var timeToBeReceived = TimeSpan.Parse(timeToBeReceivedSetting);
+                endpointConfiguration.AuditProcessedMessagesTo(
+                    auditQueue: auditQueue,
+                    timeToBeReceived: timeToBeReceived);
 
 
                 recoverability.Delayed(
@@ -66,8 +82,13 @@ namespace MeasureService.WebApi
 
                 var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
                 transport.UseConventionalRoutingTopology()
-                    .ConnectionString("host= localhost:5672");
+                    .ConnectionString(transportConnection);
 
+                var routing = transport.Routing();
+
+                routing.RouteToEndpoint(
+                    assembly: typeof(IUpdateUserFile).Assembly,
+                    destination: subscriberEndpoint);
 
                 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
                 var connection = Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString");
@@ -82,6 +103,12 @@ namespace MeasureService.WebApi
 
                 var subscriptions = persistence.SubscriptionSettings();
                 subscriptions.CacheFor(TimeSpan.FromMinutes(10));
+
+                var scanner = endpointConfiguration.AssemblyScanner();
+                scanner.ScanAssembliesInNestedDirectories = true;
+
+                endpointConfiguration.AuditSagaStateChanges(
+                    serviceControlQueue: "Particular.Servicecontrol");
 
                 var conventions = endpointConfiguration.Conventions();
                 conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");

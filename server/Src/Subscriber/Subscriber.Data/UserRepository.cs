@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
-
+using Subscriber.Data.Exceptions;
 
 namespace Subscriber.Data
 {
@@ -90,6 +90,7 @@ namespace Subscriber.Data
             await _userDbContext.SaveChangesAsync();
             return _mapper.Map<UserModel>(userToAdd);
         }
+
         public async Task<UserFileModel> AddUserFileAsync(UserFileModel userFileSubscriber)
         {
             UserFile userToAdd = _mapper.Map<UserFile>(userFileSubscriber);
@@ -98,8 +99,6 @@ namespace Subscriber.Data
             return _mapper.Map<UserFileModel>(userToAdd);
 
         }
-
-
 
         public bool CheckExists(string emailAddress)
         {
@@ -115,5 +114,36 @@ namespace Subscriber.Data
 
           await  _userDbContext.SaveChangesAsync();*/
         }
+
+        public async Task<bool> CheckUserFileExists(Guid userFileId)
+        {
+            return await _userDbContext.UserFiles.AnyAsync(u => u.Id == userFileId);
+        }
+
+        public async Task<float> UpdateWeight(Guid userFileId, float weight)
+        {
+            UserFile userFileToUpdate = await _userDbContext.UserFiles.Where(t => t.Id == userFileId).FirstOrDefaultAsync();
+            if (userFileToUpdate == null)
+            {
+                throw new UserNotFoundException(userFileId);
+            }
+
+            userFileToUpdate.Weight = weight;
+
+            //update bmi as result of weigh change
+
+            float height = userFileToUpdate.Height != 0 ? userFileToUpdate.Height : 176;
+
+            float BMI = Convert.ToSingle(weight / Math.Sqrt(height));
+
+            userFileToUpdate.BMI = BMI;
+
+            await _userDbContext.SaveChangesAsync();
+
+            return BMI;
+
+        }
+
+
     }
 }

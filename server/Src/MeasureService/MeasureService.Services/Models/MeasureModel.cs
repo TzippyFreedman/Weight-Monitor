@@ -1,4 +1,4 @@
-﻿using MeasureService.Services.Enums;
+﻿using Messages.Enums.MeasureStatus;
 using System;
 using System.Collections.Generic;
 using System.Text;

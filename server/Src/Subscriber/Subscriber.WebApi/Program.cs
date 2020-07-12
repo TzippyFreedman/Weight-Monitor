@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBus.Transport;
 using Serilog;
+using Subscriber.Data.Exceptions;
 
 namespace Subscriber.WebApi
 {
@@ -56,47 +58,64 @@ namespace Subscriber.WebApi
                         .UseNServiceBus(context =>
                         {
 
-                            const string endpointName = "WeightMonitor.Subscriber";
+                            const string endpointName = "WeightMonitor.Subscriber.Api";
                             var endpointConfiguration = new EndpointConfiguration(endpointName);
 
                             endpointConfiguration.EnableInstallers();
 
-                            endpointConfiguration.AuditProcessedMessagesTo("audit");
+                            // endpointConfiguration.AuditProcessedMessagesTo("audit");
 
-                            /*                endpointConfiguration.AuditSagaStateChanges(
-                                      serviceControlQueue: "Particular.Servicecontrol");*/
+                            //var appSettings = ConfigurationManager.AppSettings;
+                            var auditQueue= Configuration["AppSettings:auditQueue"];
+                            //var auditQueue = appSettings.Get("auditQueue");
+                            // var serviceControlQueue = appSettings.Get("ServiceControlQueue");
+                            var serviceControlQueue = Configuration["AppSettings:ServiceControlQueue"];
 
+                            var timeToBeReceivedSetting = Configuration["AppSettings:timeToBeReceived"];
 
+                            var transportConnection = Configuration.GetConnectionString("transportConnection");
+                            //var timeToBeReceivedSetting = appSettings.Get("timeToBeReceived");
+                            var timeToBeReceived = TimeSpan.Parse(timeToBeReceivedSetting);
+                            endpointConfiguration.AuditProcessedMessagesTo(
+                                auditQueue: auditQueue,
+                                timeToBeReceived: timeToBeReceived);
+
+                            //change to config
+                            endpointConfiguration.AuditSagaStateChanges(
+                      serviceControlQueue: serviceControlQueue);
+
+                            var scanner = endpointConfiguration.AssemblyScanner();
+                            scanner.ScanAssembliesInNestedDirectories = true;
 
                             var outboxSettings = endpointConfiguration.EnableOutbox();
 
                             outboxSettings.KeepDeduplicationDataFor(TimeSpan.FromDays(6));
                             outboxSettings.RunDeduplicationDataCleanupEvery(TimeSpan.FromMinutes(15));
 
-                            SubscribeToNotifications.Subscribe(endpointConfiguration);
+                            //SubscribeToNotifications.Subscribe(endpointConfiguration);
 
 
                             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
                             transport.UseConventionalRoutingTopology()
-                                .ConnectionString("host= localhost:5672");
+                                .ConnectionString(transportConnection);
 
 
                             var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-                            var connection = Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString");
+                            var persistenceConnection = Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString");
 
                             persistence.SqlDialect<SqlDialect.MsSqlServer>();
 
                             persistence.ConnectionBuilder(
                                 connectionBuilder: () =>
                                 {
-                                    return new SqlConnection(connection);
+                                    return new SqlConnection(persistenceConnection);
                                 });
 
                             var subscriptions = persistence.SubscriptionSettings();
                             subscriptions.CacheFor(TimeSpan.FromMinutes(10));
 
-                            var recoverability = endpointConfiguration.Recoverability();
-                            recoverability.CustomPolicy(SubscriberServiceRetryPolicy);
+                          /*  var recoverability = endpointConfiguration.Recoverability();
+                            recoverability.CustomPolicy(SubscriberServiceRetryPolicy);*/
 
                             var conventions = endpointConfiguration.Conventions();
                             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
@@ -111,7 +130,7 @@ namespace Subscriber.WebApi
                     webBuilder.UseStartup<Startup>();
                 });
 
-        private static RecoverabilityAction SubscriberServiceRetryPolicy(RecoverabilityConfig config, ErrorContext context)
+       /* private static RecoverabilityAction SubscriberServiceRetryPolicy(RecoverabilityConfig config, ErrorContext context)
         {
             var action = DefaultRecoverabilityPolicy.Invoke(config, context);
 
@@ -119,14 +138,14 @@ namespace Subscriber.WebApi
             {
                 return action;
             }
-           /* if (context.Exception is PatientNotExistExcption)
+*//*            if (context.Exception is UserNotFoundException)
             {
                 return RecoverabilityAction.MoveToError(config.Failed.ErrorQueue);
-            }*/
+            }*//*
             // Override default delivery delay.
             return RecoverabilityAction.DelayedRetry(TimeSpan.FromMinutes(3));
 
-        }
+        }*/
 
       
     }

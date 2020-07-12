@@ -18,13 +18,16 @@
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.0.1" />
     <PackageReference Include="NServiceBus.Persistence.Sql" Version="6.0.1" />
     <PackageReference Include="NServiceBus.RabbitMQ" Version="5.2.0" />
+    <PackageReference Include="NServiceBus.SagaAudit" Version="3.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MeasureService\MeasureService.Services\MeasureService.Services.csproj" />
     <ProjectReference Include="..\..\Messages\Messages.csproj" />
     <ProjectReference Include="..\Subscriber.Data\Subscriber.Data.csproj" />
     <ProjectReference Include="..\Subscriber.Services\Subscriber.Services.csproj" />
+    <ProjectReference Include="..\SubscriberService.Handlers\SubscriberService.Handlers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

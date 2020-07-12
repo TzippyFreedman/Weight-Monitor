@@ -1,4 +1,5 @@
 ﻿using MeasureService.Services.Models;
+using Messages.Enums.MeasureStatus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace MeasureService.Services
 {
     public interface IMeasureService
     {
-        Task Add(MeasureModel measure);
+        Task<MeasureModel> Add(MeasureModel measure);
+        Task UpdateStatus(Guid measureId, MeasureStatus status, string comments);
     }
 }

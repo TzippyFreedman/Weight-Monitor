@@ -16,6 +16,12 @@ namespace Subscriber.Services
             _userRepository = userRepository;
         }
 
+        public async Task<bool> CheckUserFileExist(Guid userFileId)
+        {
+          bool userFileExist = await  _userRepository.CheckUserFileExists(userFileId);
+            return userFileExist;
+        }
+
         public async Task<UserFileModel> GetUserFileById(Guid userFileId)
         {
             return await _userRepository.GetUserFileById(userFileId);
@@ -65,6 +71,12 @@ namespace Subscriber.Services
 
 
 
+        }
+
+        public async Task<float> UpdateWeight(Guid userFileId, float weight)
+        {          
+             float updatedBMI =   await _userRepository.UpdateWeight(userFileId, weight);
+            return updatedBMI;
         }
 
         public async Task VerifyUserAsync(string emailAddress)

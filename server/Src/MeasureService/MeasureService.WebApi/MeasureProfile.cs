@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MeasureService.Data.Entities;
 using MeasureService.Services.Models;
 using MeasureService.WebApi.DTO;
 using System;
@@ -13,7 +14,9 @@ namespace MeasureService.WebApi
         public MeasureProfile()
         {
             CreateMap<MeasureDTO, MeasureModel>();
-           
+            CreateMap<MeasureModel, Measure>()
+                .ReverseMap();
+
         }
        
     }

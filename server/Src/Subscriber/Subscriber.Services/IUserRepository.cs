@@ -15,6 +15,8 @@ namespace Subscriber.Services
         Task<UserModel> LoginAsync(string email, string password);
         Task<Guid> GetUserFileIdByUserId(Guid id);
         Task<UserFileModel> GetUserFileById(Guid userCardId);
+        Task<bool> CheckUserFileExists(Guid userfileId);
         Task AddVertificationCodeToUser(string emailAddress, Guid vertificationCode);
+        Task<float> UpdateWeight(Guid userfileId, float weight);
     }
 }
