@@ -39,6 +39,19 @@ namespace MeasureService.WebApi
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins( "http://localhost:4200");
+                        builder.AllowCredentials();
+                        builder.AllowAnyHeader();
+                        builder.WithMethods("GET", "POST", "PUT");
+
+                    });
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +60,8 @@ namespace MeasureService.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("MyPolicy" );
+
             }
 
             app.UseHttpsRedirection();

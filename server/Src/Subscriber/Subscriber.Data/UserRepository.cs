@@ -122,7 +122,10 @@ namespace Subscriber.Data
 
         public async Task<float> UpdateWeight(Guid userFileId, float weight)
         {
-            UserFile userFileToUpdate = await _userDbContext.UserFiles.Where(t => t.Id == userFileId).FirstOrDefaultAsync();
+
+                UserFile userFileToUpdate = await _userDbContext.UserFiles.Where(t => t.Id == userFileId).FirstOrDefaultAsync();
+
+
             if (userFileToUpdate == null)
             {
                 throw new UserNotFoundException(userFileId);

@@ -25,7 +25,7 @@ import { RouterModule } from '@angular/router';
      
          {path:'register',component:RegisterComponent},
         {path:'login',component:LoginComponent},
-        {path:'user:/userFileId',component:UserComponent},
+        {path:'user/:userFileId',component:UserComponent},
         {path:"",redirectTo:'/login',pathMatch:"full"}
   ]),
 ],

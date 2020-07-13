@@ -1,4 +1,5 @@
 ﻿using Messages.Commands;
+using Messages.Enums;
 using Messages.Events;
 using NServiceBus;
 using NServiceBus.Logging;
@@ -20,6 +21,7 @@ namespace SubscriberService.Handlers
             return context.Publish<IEmailSent>(msg =>
             {
                 msg.MeasureId = message.MeasureId;
+                msg.status = RequestStatus.Succeeded;
             });
 
 

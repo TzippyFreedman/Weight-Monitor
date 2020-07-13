@@ -8,6 +8,7 @@ using MeasureService.Services.Models;
 using MeasureService.WebApi.DTO;
 using Messages.Commands;
 using Messages.Enums.MeasureStatus;
+using Messages.Events;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
@@ -37,9 +38,9 @@ namespace MeasureService.WebApi.Controllers
         {
             MeasureModel measureModel = _mapper.Map<MeasureModel>(measure);
             measureModel.Status = MeasureStatus.Pending;
-            MeasureModel newMeasureModel =  await _measureService.Add(measureModel);
+            MeasureModel newMeasureModel = await _measureService.Add(measureModel);
 
-            await _messageSession.Send<IUpdateUserFile>(message =>
+            await _messageSession.Publish<IMeasureAdded>(message =>
             {
                 message.MeasureId = newMeasureModel.Id;
                 message.Weight = measure.Weight;

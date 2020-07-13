@@ -19,18 +19,14 @@ namespace MeasureService.Handlers
         }
         public async Task Handle(IUpdateMeasureStatus message, IMessageHandlerContext context)
         {
-            try
-            {
-                await _measureService.UpdateStatus(message.MeasureId, message.MeasureStatus, message.Comments);
-            }
-            catch( Exception e)
-            {
 
-            }
+                await _measureService.UpdateStatus(message.MeasureId, message.MeasureStatus, message.Comments);
+
 
             await context.Publish<IMeasureStatusUpdated>(msg =>
             {
                 msg.MeasureId = message.MeasureId;
+                msg.measureStatus = message.MeasureStatus;
 
             });
         }

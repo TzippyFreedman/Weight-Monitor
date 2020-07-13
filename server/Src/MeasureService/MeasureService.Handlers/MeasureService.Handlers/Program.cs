@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MeasureService.Data;
 using MeasureService.Services;
+using Messages.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
@@ -37,15 +38,18 @@ namespace MeasureService.Handlers
                .UseSqlServer(ConfigurationManager.ConnectionStrings["weightMonitorMeasureDBConnectionString"].ToString()));
 
             var appSettings = ConfigurationManager.AppSettings;
-            var auditQueue = appSettings.Get("auditQueue");
+            var auditQueue = appSettings.Get("AuditQueue");
+            var subscriberEndpoint = appSettings.Get("SubscriberEndpoint");
+            var trackingEndpoint = appSettings.Get("TrackingEndpoint");
+
             var serviceControlQueue = appSettings.Get("ServiceControlQueue");
-            var timeToBeReceivedSetting = appSettings.Get("timeToBeReceived");
+            var timeToBeReceivedSetting = appSettings.Get("TimeToBeReceived");
             var timeToBeReceived = TimeSpan.Parse(timeToBeReceivedSetting);
             endpointConfiguration.AuditProcessedMessagesTo(
                 auditQueue: auditQueue,
                 timeToBeReceived: timeToBeReceived);
-            /* endpointConfiguration.AuditSagaStateChanges(
-                       serviceControlQueue: "Particular.Servicecontrol");*/
+/*            endpointConfiguration.AuditSagaStateChanges(
+                      serviceControlQueue: "Particular.Servicecontrol");*/
 
 
 
@@ -78,9 +82,16 @@ namespace MeasureService.Handlers
             recoverability.Delayed(
                 customizations: delayed =>
                 {
-                    delayed.NumberOfRetries(3);
+                    delayed.NumberOfRetries(0);
                     delayed.TimeIncrease(TimeSpan.FromMinutes(3));
                 });
+
+            recoverability.Immediate(
+               customizations: delayed =>
+               {
+                   delayed.NumberOfRetries(1);
+                  
+               });
 
             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
             transport.UseConventionalRoutingTopology()
@@ -88,9 +99,17 @@ namespace MeasureService.Handlers
 
             var routing = transport.Routing();
 
-/*            routing.RouteToEndpoint(
-                assembly: typeof(INotifyPolice).Assembly,
-                destination: "Police");*/
+            routing.RouteToEndpoint(
+               messageType : typeof(ISendEmail),
+                destination: subscriberEndpoint);
+
+              routing.RouteToEndpoint(
+               messageType : typeof(IUpdateWeight),
+                destination: subscriberEndpoint);
+
+            routing.RouteToEndpoint(
+             messageType: typeof(IAddTrackingRecord),
+              destination: trackingEndpoint);
 
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");

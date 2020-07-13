@@ -4,10 +4,12 @@ using System.Text;
 
 namespace Messages.Commands
 {
-   public interface ISendEmail
+    public interface IAddMeasure
     {
-        Guid MeasureId { get; set; }
+        public Guid MeasureId { get; set; }
         Guid UserFileId { get; set; }
-        float Weight { get; set; }
+        public float Weight { get; set; }
+
+
     }
 }

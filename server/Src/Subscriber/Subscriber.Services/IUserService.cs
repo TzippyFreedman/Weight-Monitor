@@ -13,6 +13,6 @@ namespace Subscriber.Services
         Task<UserFileModel> GetUserFileById(Guid userFileId);
         Task VerifyUserAsync(string emailAddress);
         Task<bool> CheckUserFileExist(Guid userFileId);
-        Task<float> UpdateWeight(Guid userFileId, float weight);
+        Task<bool> UpdateWeight(Guid userFileId, float weight);
     }
 }

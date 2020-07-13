@@ -10,12 +10,12 @@ import { ActivatedRoute } from '@angular/router';
 export class UserComponent implements OnInit {
   user:IUser;
   userFileId:string;
-  constructor(private route:ActivatedRoute) { }
+  constructor(private route:ActivatedRoute, ) { }
 
   
   ngOnInit(): void {
     this.route.paramMap.subscribe( paramMap => {
-      this.userFileId = paramMap.get('userFileId');
+    this.userFileId = paramMap.get('userFileId');
 
   });
 

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Messages\Messages.csproj" />
+    <ProjectReference Include="..\..\..\Subscriber\SubscriberService.Handlers\SubscriberService.Handlers.csproj" />
     <ProjectReference Include="..\..\MeasureService.Data\MeasureService.Data.csproj" />
     <ProjectReference Include="..\..\MeasureService.Services\MeasureService.Services.csproj" />
   </ItemGroup>

@@ -41,6 +41,19 @@ namespace Subscriber.WebApi
 
 
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200");
+                        builder.AllowCredentials();
+                        builder.AllowAnyHeader();
+                        builder.WithMethods("GET", "POST", "PUT");
+
+                    });
+
+            });
 
         }
 
@@ -50,6 +63,7 @@ namespace Subscriber.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("MyPolicy");
             }
             app.UseErrorHandlingMiddleware();
 

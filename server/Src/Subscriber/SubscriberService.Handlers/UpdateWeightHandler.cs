@@ -1,4 +1,5 @@
 ﻿using Messages.Commands;
+using Messages.Enums;
 using Messages.Events;
 using NServiceBus;
 using Subscriber.Services;
@@ -20,13 +21,13 @@ namespace SubscriberService.Handlers
         public async Task Handle(IUpdateWeight message, IMessageHandlerContext context)
         {
 
-            float updatedBMI =    await _userService.UpdateWeight(message.UserFileId, message.Weight);
+            bool isUpdateSuccess =    await _userService.UpdateWeight(message.UserFileId, message.Weight);
 
 
             await context.Publish<IWeightUpdated>(msg =>
             {
                 msg.MeasureId = message.MeasureId;
-                msg.BMI = updatedBMI;
+                msg.status = isUpdateSuccess ? RequestStatus.Succeeded : RequestStatus.Failed;
             });
         }
     }

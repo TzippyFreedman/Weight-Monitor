@@ -32,7 +32,16 @@ namespace MeasureService.Data
 
         public async Task UpdateStatusAsync(Guid measureId, MeasureStatus status, string comments)
         {
-            Measure measureToUpdate = _measureDbContext.Measures.Where(t => t.Id == measureId).FirstOrDefault();
+            Measure measureToUpdate;
+            try
+            {
+                 measureToUpdate = _measureDbContext.Measures.Where(t => t.Id == measureId).FirstOrDefault();
+
+            }
+            catch(Exception e)
+            {
+                measureToUpdate = new Measure();
+            }
 
             if (measureToUpdate == null)
             {

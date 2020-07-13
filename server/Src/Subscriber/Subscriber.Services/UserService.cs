@@ -73,10 +73,18 @@ namespace Subscriber.Services
 
         }
 
-        public async Task<float> UpdateWeight(Guid userFileId, float weight)
-        {          
-             float updatedBMI =   await _userRepository.UpdateWeight(userFileId, weight);
-            return updatedBMI;
+        public async Task<bool> UpdateWeight(Guid userFileId, float weight)
+        {
+            bool isUserFileExist = await _userRepository.CheckUserFileExists(userFileId);
+            if (isUserFileExist)
+            {
+                await _userRepository.UpdateWeight(userFileId, weight);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async Task VerifyUserAsync(string emailAddress)

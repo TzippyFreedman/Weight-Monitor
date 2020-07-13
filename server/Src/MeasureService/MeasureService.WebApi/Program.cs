@@ -55,6 +55,7 @@ namespace MeasureService.WebApi
                 //var auditQueue = appSettings.Get("auditQueue");
                 // var serviceControlQueue = appSettings.Get("ServiceControlQueue");
                 var serviceControlQueue = Configuration["AppSettings:ServiceControlQueue"];
+                var measureEndpoint = Configuration["AppSettings:MeasureEndpoint"];
 
                 var timeToBeReceivedSetting = Configuration["AppSettings:timeToBeReceived"];
                 var subscriberEndpoint = Configuration["AppSettings:SubscriberEndpoint"];
@@ -69,14 +70,14 @@ namespace MeasureService.WebApi
                 recoverability.Delayed(
                     customizations: delayed =>
                     {
-                        delayed.NumberOfRetries(2);
+                        delayed.NumberOfRetries(0);
                         delayed.TimeIncrease(TimeSpan.FromMinutes(4));
                     });
 
                 recoverability.Immediate(
                     customizations: immidiate =>
                     {
-                        immidiate.NumberOfRetries(3);
+                        immidiate.NumberOfRetries(1);
 
                     });
 
@@ -87,8 +88,8 @@ namespace MeasureService.WebApi
                 var routing = transport.Routing();
 
                 routing.RouteToEndpoint(
-                    assembly: typeof(IUpdateUserFile).Assembly,
-                    destination: subscriberEndpoint);
+                    messageType: typeof(IAddMeasure),
+                    destination: measureEndpoint);
 
                 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
                 var connection = Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString");

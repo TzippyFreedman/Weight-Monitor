@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Messages.Events
 {
-    public interface IEmailSent
+   public interface IWeightUpdated
     {
         Guid MeasureId { get; set; }
+        float BMI { get; set; }
         public RequestStatus status { get; set; }
     }
 }

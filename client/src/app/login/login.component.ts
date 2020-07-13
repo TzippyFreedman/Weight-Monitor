@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      'username': new FormControl('',[
+      'emailAddress': new FormControl('',[
       Validators.required,
       Validators.minLength(2),
       Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")
@@ -49,11 +49,11 @@ export class LoginComponent implements OnInit {
         }
         this.loading = true;
         this.userToAuthenticate.password=this.formControls.password.value;
-        this.userToAuthenticate.userName= this.formControls.username.value;
+        this.userToAuthenticate.email= this.formControls.emailAddress.value;
         this.http.login(this.userToAuthenticate)
             .subscribe(
                 result => {
-                    this.router.navigate([environment.userComponentUrl]);
+                    this.router.navigate([environment.userComponentUrl, result]);
                 },
                 error => {
                     alert(error);

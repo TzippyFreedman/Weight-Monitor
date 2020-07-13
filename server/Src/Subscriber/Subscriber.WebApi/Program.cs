@@ -94,7 +94,19 @@ namespace Subscriber.WebApi
 
                             //SubscribeToNotifications.Subscribe(endpointConfiguration);
 
+                            var recoverability = endpointConfiguration.Recoverability();
+                            recoverability.Delayed(
+                                customizations: delayed =>
+                                {
+                                    delayed.NumberOfRetries(0);
+                                    delayed.TimeIncrease(TimeSpan.FromMinutes(3));
+                                });
+                            recoverability.Immediate(
+                               customizations: delayed =>
+                               {
+                                   delayed.NumberOfRetries(1);
 
+                               });
                             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
                             transport.UseConventionalRoutingTopology()
                                 .ConnectionString(transportConnection);

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Messages.Events
 {
-   public interface IWeightUpdated
+    public interface IMeasureAdded
     {
         Guid MeasureId { get; set; }
         Guid UserFileId { get; set; }
-        float BMI { get; set; }
+        float Weight { get; set; }
     }
 }
