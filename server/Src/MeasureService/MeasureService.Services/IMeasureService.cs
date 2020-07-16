@@ -10,6 +10,6 @@ namespace MeasureService.Services
     public interface IMeasureService
     {
         Task<MeasureModel> Add(MeasureModel measure);
-        Task UpdateStatus(Guid measureId, MeasureStatus status, string comments);
-    }
+/*        Task UpdateStatus(Guid measureId, MeasureStatus status, string comments);
+*/    }
 }

@@ -2,10 +2,10 @@
     <div class="form-group">
         <label for="weight">Weight</label>
         <input type="number" formControlName="weight" class="form-control" [ngClass]="{ 'is-invalid': submitted && formControls.weight.errors }" />
-        <div *ngIf="submitted && formControls.weight.errors" class="invalid-feedback">
+        <div *ngIf="formControls.weight.errors" class="invalid-feedback">
             <div *ngIf="formControls.weight.errors.required">Weight is required</div>
         </div>
-        <div *ngIf="submitted && formControls.weight.errors" class="invalid-feedback">
+        <div *ngIf="formControls.weight.errors" class="invalid-feedback">
             <div *ngIf="formControls.weight.errors.weightValidator">Weight has to be between 6 and 200</div>
         </div>
     </div>

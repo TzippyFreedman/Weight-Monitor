@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
       Validators.minLength(6)
     ])
   });
-
+debugger;
  
   }
   get formControls() { return this.loginForm.controls; }

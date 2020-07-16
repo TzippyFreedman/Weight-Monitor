@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, ValidationErrors,ValidatorFn } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidationErrors,ValidatorFn, AbstractControl } from '@angular/forms';
 import { IMeasure } from '../shared/models/IMeasure';
 import { Router } from '@angular/router';
 import { UserService } from '../shared/services/user.service';
@@ -26,16 +26,26 @@ export class AddMeasureComponent implements OnInit {
 ngOnInit(): void {
   this.measureForm = new FormGroup({
     'weight': new FormControl('',[
-    Validators.required, this.weightValidator])
+    Validators.required, 
+    Validators.min(1),
+    this.weightValidator()])
 });
 }
 
-weightValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-  debugger;
-  //const weight = control.get('weight').value;
- // return (weight< this.MIN_WEIGHT || weight> this.MAX_WEIGHT) ? { 'forbiddenWeight': true } : null;
- return null;
-};
+weightValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    debugger;
+const weight = control.value;
+ return (weight< this.MIN_WEIGHT || weight> this.MAX_WEIGHT) ? { 'forbiddenWeight': true }: null;
+  }
+}
+
+// weightValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
+//   debugger;
+//   //const weight = control.get('weight').value;
+//  // return (weight< this.MIN_WEIGHT || weight> this.MAX_WEIGHT) ? { 'forbiddenWeight': true } : null;
+//  return null;
+// };
 
 
 

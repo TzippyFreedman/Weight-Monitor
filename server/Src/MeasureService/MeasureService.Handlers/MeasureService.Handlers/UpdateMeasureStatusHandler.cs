@@ -13,16 +13,16 @@ namespace MeasureService.Handlers
 {
     class UpdateMeasureStatusHandler : IHandleMessages<IUpdateMeasureStatus>
     {
-        private readonly IMeasureService _measureService;
+        private readonly IMeasureHandlerRepository _measureRopository;
 
-        public UpdateMeasureStatusHandler(IMeasureService measureService)
+        public UpdateMeasureStatusHandler(IMeasureHandlerRepository measureRopository)
         {
-            _measureService = measureService;
+            _measureRopository = measureRopository;
         }
         public async Task Handle(IUpdateMeasureStatus message, IMessageHandlerContext context)
         {
-
-              await _measureService.UpdateStatus(message.MeasureId, message.MeasureStatus, message.Comments);
+            await _measureRopository.UpdateStatusAsync(message.MeasureId, message.MeasureStatus, message.Comments);
+             // await _measureService.UpdateStatus(message.MeasureId, message.MeasureStatus, message.Comments);
 
             await context.Reply<IUpdateMeasureStatusResponse>(msg =>
             {
@@ -30,12 +30,7 @@ namespace MeasureService.Handlers
 
             });
 
-            /*            await context.Publish<IMeasureStatusUpdated>(msg =>
-                        {
-                            msg.MeasureId = message.MeasureId;
-                            msg.measureStatus = message.MeasureStatus;
 
-                        });*/
         }
     }
 }
