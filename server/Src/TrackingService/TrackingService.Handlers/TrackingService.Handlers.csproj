@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MeasureService\MeasureService.Data\MeasureService.Data.csproj" />
     <ProjectReference Include="..\..\Messages\Messages.csproj" />
     <ProjectReference Include="..\TrackingService.Data\TrackingService.Data.csproj" />
     <ProjectReference Include="..\TrackingService.Services\TrackingService.Services.csproj" />

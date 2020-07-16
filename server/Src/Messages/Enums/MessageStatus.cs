@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Messages.Enums
 {
-    public enum  RequestStatus
+    public enum  MessageStatus
     {
         Pending,
         Succeeded,

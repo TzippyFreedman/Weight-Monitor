@@ -1,4 +1,5 @@
 ﻿using MeasureService.Data.Entities;
+using Messages.Enums.MeasureStatus;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ namespace MeasureService.Data
 
             modelBuilder.Entity<Measure>()
                           .ToTable("Measure");
+            modelBuilder.Entity<Measure>()
+                        .Property(measure => measure.Status)
+                        .HasConversion<string>();
             modelBuilder.Entity<Measure>()
                         .Property(measure => measure.UserFileId)
                         .IsRequired();

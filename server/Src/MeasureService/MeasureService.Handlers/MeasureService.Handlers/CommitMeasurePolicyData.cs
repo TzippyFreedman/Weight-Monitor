@@ -9,8 +9,8 @@ namespace MeasureService.Handlers
     public class CommitMeasurePolicyData : ContainSagaData
     {
         public Guid MeasureId { get; set; }
-        public RequestStatus WeightUpdateStatus { get; set; }
-        public RequestStatus EmailSendStatus { get; set; }
+        public MessageStatus WeightUpdateStatus { get; set; }
+        public MessageStatus EmailSendStatus { get; set; }
 
     }
 }

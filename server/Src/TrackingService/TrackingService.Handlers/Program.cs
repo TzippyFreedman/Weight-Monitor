@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
@@ -24,6 +23,8 @@ namespace TrackingService.Handlers
             var endpointConfiguration = new EndpointConfiguration(endpointName);
 
             endpointConfiguration.EnableInstallers();
+            //if in development
+            endpointConfiguration.PurgeOnStartup(true);
 
             var containerSettings = endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
             containerSettings.ServiceCollection.AddScoped(typeof(ITrackingService), typeof(Services.TrackingService));
@@ -31,10 +32,16 @@ namespace TrackingService.Handlers
 
             containerSettings.ServiceCollection.AddAutoMapper(typeof(Program));
 
+            using (var recordDbContext = new RecordDbContext(new DbContextOptionsBuilder<RecordDbContext>()
+          .UseSqlServer(new SqlConnection((ConfigurationManager.ConnectionStrings["weightMonitorTrackingDBConnectionString"].ToString())))
+          .Options))
+            {
+                await recordDbContext.Database.EnsureCreatedAsync().ConfigureAwait(false);
+            }
 
-            containerSettings.ServiceCollection.AddDbContext<RecordDbContext>
-               (options => options
-                    .UseSqlServer(ConfigurationManager.ConnectionStrings["weightMonitorTrackingDBConnectionString"].ToString()));
+            /*  containerSettings.ServiceCollection.AddDbContext<RecordDbContext>
+                 (options => options
+                      .UseSqlServer(ConfigurationManager.ConnectionStrings["weightMonitorTrackingDBConnectionString"].ToString()));*/
 
             /* endpointConfiguration.AuditSagaStateChanges(
                        serviceControlQueue: "Particular.Servicecontrol");*/
@@ -57,6 +64,7 @@ namespace TrackingService.Handlers
             var transportConnection = ConfigurationManager.ConnectionStrings["transportConnection"].ToString();
 
 
+
             persistence.SqlDialect<SqlDialect.MsSqlServer>();
 
             persistence.ConnectionBuilder(
@@ -64,9 +72,6 @@ namespace TrackingService.Handlers
                 {
                     return new SqlConnection(persistenceConnection);
                 });
-
-            var unitOfWorkSettings = endpointConfiguration.UnitOfWork();
-            unitOfWorkSettings.WrapHandlersInATransactionScope();
 
 
             var outboxSettings = endpointConfiguration.EnableOutbox();
@@ -103,6 +108,30 @@ namespace TrackingService.Handlers
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
             conventions.DefiningEventsAs(type => type.Namespace == "Messages.Events");
+            conventions.DefiningMessagesAs(type => type.Namespace == "Messages.Messages");
+
+            endpointConfiguration.RegisterComponents(c =>
+            {
+                c.ConfigureComponent(b =>
+                {
+                    var session = b.Build<ISqlStorageSession>();
+
+                    var context = new RecordDbContext(new DbContextOptionsBuilder<RecordDbContext>()
+                        .UseSqlServer(session.Connection)
+                        .Options);
+
+                    //Use the same underlying ADO.NET transaction
+                    context.Database.UseTransaction(session.Transaction);
+
+                    //Ensure context is flushed before the transaction is committed
+                    session.OnSaveChanges(s => 
+                    context.SaveChangesAsync());
+
+                    return context;
+                }, DependencyLifecycle.InstancePerUnitOfWork);
+            });
+
+
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);

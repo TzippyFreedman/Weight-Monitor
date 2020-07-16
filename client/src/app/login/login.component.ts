@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
         this.http.login(this.userToAuthenticate)
             .subscribe(
                 result => {
-                    this.router.navigate([environment.userComponentUrl, result]);
+                    this.router.navigate([environment.userURL, result]);
                 },
                 error => {
                     alert(error);

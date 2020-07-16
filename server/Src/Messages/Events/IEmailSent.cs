@@ -8,6 +8,6 @@ namespace Messages.Events
     public interface IEmailSent
     {
         Guid MeasureId { get; set; }
-        public RequestStatus status { get; set; }
+        public MessageStatus status { get; set; }
     }
 }

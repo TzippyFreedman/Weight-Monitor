@@ -5,6 +5,7 @@ using Messages.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
+using NServiceBus.Persistence.Sql;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -23,6 +24,9 @@ namespace MeasureService.Handlers
             var endpointConfiguration = new EndpointConfiguration(endpointName);
 
             endpointConfiguration.EnableInstallers();
+            //if in development
+            endpointConfiguration.PurgeOnStartup(true);
+
 
             //endpointConfiguration.AuditProcessedMessagesTo("audit");
             var containerSettings = endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
@@ -33,10 +37,16 @@ namespace MeasureService.Handlers
             containerSettings.ServiceCollection.AddAutoMapper(typeof(Program));
 
 
-            containerSettings.ServiceCollection.AddDbContext<MeasureDbContext>
+           /* containerSettings.ServiceCollection.AddDbContext<MeasureDbContext>
                (options => options
-               .UseSqlServer(ConfigurationManager.ConnectionStrings["weightMonitorMeasureDBConnectionString"].ToString()));
+               .UseSqlServer(ConfigurationManager.ConnectionStrings["weightMonitorMeasureDBConnectionString"].ToString()));*/
 
+            using (var receiverDataContext = new MeasureDbContext(new DbContextOptionsBuilder<MeasureDbContext>()
+                .UseSqlServer(new SqlConnection(ConfigurationManager.ConnectionStrings["weightMonitorMeasureDBConnectionString"].ToString()))
+                .Options))
+            {
+                await receiverDataContext.Database.EnsureCreatedAsync().ConfigureAwait(false);
+            }
             var appSettings = ConfigurationManager.AppSettings;
             var auditQueue = appSettings.Get("AuditQueue");
             var subscriberEndpoint = appSettings.Get("SubscriberEndpoint");
@@ -114,6 +124,31 @@ namespace MeasureService.Handlers
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
             conventions.DefiningEventsAs(type => type.Namespace == "Messages.Events");
+            conventions.DefiningMessagesAs(type => type.Namespace == "Messages.Messages");
+
+
+            endpointConfiguration.RegisterComponents(c =>
+            {
+                c.ConfigureComponent(b =>
+                {
+                    var session = b.Build<ISqlStorageSession>();
+
+                    var context = new MeasureDbContext(new DbContextOptionsBuilder<MeasureDbContext>()
+                        .UseSqlServer(session.Connection)
+                        .Options);
+
+                    //Use the same underlying ADO.NET transaction
+                    context.Database.UseTransaction(session.Transaction);
+
+                    //Ensure context is flushed before the transaction is committed
+                    session.OnSaveChanges(s => context.SaveChangesAsync());
+
+                    return context;
+
+
+                }, DependencyLifecycle.InstancePerUnitOfWork);
+            });
+
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);

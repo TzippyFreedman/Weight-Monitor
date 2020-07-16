@@ -32,8 +32,8 @@ namespace Subscriber.WebApi.Controllers
 
             UserModel userToRegister = _mapper.Map<UserModel>(userRegister);
             UserFileModel userFileToRegister = _mapper.Map<UserFileModel>(userRegister);
-            UserModel userAdded = await _userService.RegisterAsync(userToRegister, userFileToRegister);
-            if (userAdded == null)
+            UserModel newUser = await _userService.RegisterAsync(userToRegister, userFileToRegister);
+            if (newUser == null)
             {
                 Log.Information("User with email {@email} requested to create but already exists", userRegister.Email);
                 throw new Exception("Bad Request: Patient with email ${ userRegister.Email } requested to create but already exists");
@@ -46,7 +46,7 @@ namespace Subscriber.WebApi.Controllers
 
             else
             {
-                Log.Information("User with email {@email} created successfully", userAdded.Email);
+                Log.Information("User with email {@email} created successfully", newUser.Email);
                 return StatusCode((int)HttpStatusCode.Created);
             }
         }

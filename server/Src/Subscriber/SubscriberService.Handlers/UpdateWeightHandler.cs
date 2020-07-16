@@ -1,6 +1,7 @@
 ﻿using Messages.Commands;
 using Messages.Enums;
 using Messages.Events;
+using Messages.Messages;
 using NServiceBus;
 using Subscriber.Services;
 using System;
@@ -24,11 +25,16 @@ namespace SubscriberService.Handlers
             bool isUpdateSuccess =    await _userService.UpdateWeight(message.UserFileId, message.Weight);
 
 
-            await context.Publish<IWeightUpdated>(msg =>
+            await context.Reply<IUpdateWeightResponse>(msg =>
             {
-                msg.MeasureId = message.MeasureId;
-                msg.status = isUpdateSuccess ? RequestStatus.Succeeded : RequestStatus.Failed;
+                msg.status = isUpdateSuccess ? MessageStatus.Succeeded : MessageStatus.Failed;
             });
+
+            /*            await context.Publish<IWeightUpdated>(msg =>
+                        {
+                            msg.MeasureId = message.MeasureId;
+                            msg.status = isUpdateSuccess ? MessageStatus.Succeeded : MessageStatus.Failed;
+                        });*/
         }
     }
 }

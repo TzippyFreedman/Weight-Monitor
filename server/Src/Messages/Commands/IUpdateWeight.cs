@@ -4,11 +4,10 @@ using System.Text;
 
 namespace Messages.Commands
 {
-   public  interface IUpdateUser
+   public interface IUpdateWeight
     {
         Guid MeasureId { get; set; }
         Guid UserFileId { get; set; }
-        int Weight { get; set; }
-
+        float Weight { get; set; }
     }
 }

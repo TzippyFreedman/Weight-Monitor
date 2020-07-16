@@ -4,14 +4,16 @@ using MeasureService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MeasureService.Data.Migrations
 {
     [DbContext(typeof(MeasureDbContext))]
-    partial class MeasureDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200714071744_EnumWithAnnotation")]
+    partial class EnumWithAnnotation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace MeasureService.Data.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(24)");
 
                     b.Property<Guid>("UserFileId")
                         .HasColumnType("uniqueidentifier");

@@ -1,5 +1,7 @@
 ﻿using Messages.Commands;
+using Messages.Enums;
 using Messages.Events;
+using Messages.Messages;
 using Microsoft.EntityFrameworkCore;
 using NServiceBus;
 using System;
@@ -35,7 +37,7 @@ namespace TrackingService.Handlers
 
             if (previousRecord != null)
             {
-                previousBMI= previousRecord.BMI;
+                previousBMI = previousRecord.BMI;
             }
             else
             {
@@ -55,15 +57,13 @@ namespace TrackingService.Handlers
 
             //Record record = _mapper.Map<Record>(newRecord);
             _recordDbContext.Records.Add(record);
-            await _recordDbContext.SaveChangesAsync();
+            //await _recordDbContext.SaveChangesAsync();
             //await _trackingRepository.Add(record);
             //await _trackingService.AddTrackingRecord(record);
 
             //throw new Exception();
-            await context.Publish<ITrackingRecordAdded>(msg =>
-             {
-                 msg.MeasureId = message.MeasureId;
-             });
+
+
 
 
         }

@@ -3,6 +3,7 @@ using Messages.Commands;
 using Messages.Enums;
 using Messages.Enums.MeasureStatus;
 using Messages.Events;
+using Messages.Messages;
 using NServiceBus;
 using SubscriberService.Handlers;
 using System;
@@ -14,10 +15,9 @@ namespace MeasureService.Handlers
 {
     public class CommitMeasurePolicy : Saga<CommitMeasurePolicyData>,
                IAmStartedByMessages<IMeasureAdded>,
-        IHandleMessages<IEmailSent>,
-        IHandleMessages<IWeightUpdated>,
-        IHandleMessages<IMeasureStatusUpdated>,
-        IHandleMessages<ITrackingRecordAdded>
+        IHandleMessages<ISendEmailResponse>,
+        IHandleMessages<IUpdateWeightResponse>,
+        IHandleMessages<IUpdateMeasureStatusResponse>
     {
         public async Task Handle(IMeasureAdded message, IMessageHandlerContext context)
         {
@@ -37,44 +37,45 @@ namespace MeasureService.Handlers
         }
 
 
-        public async Task Handle(IEmailSent message, IMessageHandlerContext context)
+        public async Task Handle(ISendEmailResponse message, IMessageHandlerContext context)
         {
             Data.EmailSendStatus = message.status;
             await UpdateMeasureStatus(context);
         }
 
-        public async Task Handle(IWeightUpdated message, IMessageHandlerContext context)
+        public async Task Handle(IUpdateWeightResponse message, IMessageHandlerContext context)
         {
             Data.WeightUpdateStatus = message.status;
             await UpdateMeasureStatus(context);
         }
 
-        public async Task Handle(IMeasureStatusUpdated message, IMessageHandlerContext context)
+        public async Task Handle(IUpdateMeasureStatusResponse message, IMessageHandlerContext context)
         {
-            if (message.measureStatus == MeasureStatus.Fulfilled)
+            if (message.measureStatus.Equals(MeasureStatus.Fulfilled))
             {
                 await context.Send<IAddTrackingRecord>(msg =>
                 {
                     //Id,CardId, weight, date, trend, BMI, comments
-                    msg.MeasureId = message.MeasureId;
+                    msg.MeasureId = Data.MeasureId; ;
                     /*                msg.BMI = Data.BMI;
                                     msg.Weight = Data.Weight;
                                     msg.UserFileId = Data.UserFileId;
                                     msg.Comments = Data.Comments;*/
 
                 });
+                //reply to originator??
             }
-            else
-            {
-                MarkAsComplete();
-            }
+
+            MarkAsComplete();
+
 
         }
 
-        public async Task Handle(ITrackingRecordAdded message, IMessageHandlerContext context)
+/*        //maybe not neccessary
+        public async Task Handle(IAddTrackingRecordResponse message, IMessageHandlerContext context)
         {
             MarkAsComplete();
-        }
+        }*/
 
 
 
@@ -82,7 +83,7 @@ namespace MeasureService.Handlers
         {
             mapper.ConfigureMapping<IMeasureAdded>(message => message.MeasureId)
                  .ToSaga(sagaData => sagaData.MeasureId);
-
+/*
             mapper.ConfigureMapping<IMeasureStatusUpdated>(message => message.MeasureId)
                   .ToSaga(sagaData => sagaData.MeasureId);
 
@@ -93,14 +94,14 @@ namespace MeasureService.Handlers
                   .ToSaga(sagaData => sagaData.MeasureId);
 
             mapper.ConfigureMapping<ITrackingRecordAdded>(message => message.MeasureId)
-                  .ToSaga(sagaData => sagaData.MeasureId);
+                  .ToSaga(sagaData => sagaData.MeasureId);*/
         }
 
         private async Task UpdateMeasureStatus(IMessageHandlerContext context)
         {
-            if (Data.EmailSendStatus!= RequestStatus.Pending && Data.WeightUpdateStatus != RequestStatus.Pending)
+            if (Data.EmailSendStatus!= MessageStatus.Pending && Data.WeightUpdateStatus != MessageStatus.Pending)
             {
-                MeasureStatus commitMeasureStatus = (Data.EmailSendStatus == RequestStatus.Succeeded && Data.WeightUpdateStatus == RequestStatus.Succeeded) ? MeasureStatus.Fulfilled : MeasureStatus.Error;
+                MeasureStatus commitMeasureStatus = (Data.EmailSendStatus == MessageStatus.Succeeded && Data.WeightUpdateStatus == MessageStatus.Succeeded) ? MeasureStatus.Fulfilled : MeasureStatus.Error;
                 await context.SendLocal<IUpdateMeasureStatus>(msg =>
                 {
                     msg.MeasureId = Data.MeasureId;

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
+using Serilog;
 
 namespace MeasureService.WebApi
 {
@@ -23,7 +24,24 @@ namespace MeasureService.WebApi
                .Build();
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                 .CreateLogger();
+            try
+            {
+                Log.Information("The program has started!!!");
+                CreateHostBuilder(args).Build().Run();
+
+            }
+            catch (Exception ex)
+            {
+
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -36,12 +54,15 @@ namespace MeasureService.WebApi
 
                 endpointConfiguration.EnableInstallers();
 
-               // endpointConfiguration.AuditProcessedMessagesTo("audit");
+                // endpointConfiguration.AuditProcessedMessagesTo("audit");
 
                 /*                endpointConfiguration.AuditSagaStateChanges(
                           serviceControlQueue: "Particular.Servicecontrol");*/
 
+                endpointConfiguration.SendOnly();
 
+                var scanner = endpointConfiguration.AssemblyScanner();
+                scanner.ExcludeAssemblies("MeasureService.Data.dll");
 
 
                 var recoverability = endpointConfiguration.Recoverability();
@@ -61,6 +82,7 @@ namespace MeasureService.WebApi
                 var subscriberEndpoint = Configuration["AppSettings:SubscriberEndpoint"];
                 var transportConnection = Configuration.GetConnectionString("transportConnection");
                 //var timeToBeReceivedSetting = appSettings.Get("timeToBeReceived");
+                var schemaName = Configuration["AppSettings:SchemaName"];
                 var timeToBeReceived = TimeSpan.Parse(timeToBeReceivedSetting);
                 endpointConfiguration.AuditProcessedMessagesTo(
                     auditQueue: auditQueue,
@@ -94,7 +116,8 @@ namespace MeasureService.WebApi
                 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
                 var connection = Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString");
 
-                persistence.SqlDialect<SqlDialect.MsSqlServer>();
+             var dialect =   persistence.SqlDialect<SqlDialect.MsSqlServer>();
+                dialect.Schema(schemaName);
 
                 persistence.ConnectionBuilder(
                     connectionBuilder: () =>
@@ -105,8 +128,10 @@ namespace MeasureService.WebApi
                 var subscriptions = persistence.SubscriptionSettings();
                 subscriptions.CacheFor(TimeSpan.FromMinutes(10));
 
-                var scanner = endpointConfiguration.AssemblyScanner();
-                scanner.ScanAssembliesInNestedDirectories = true;
+
+                //in development
+               // endpointConfiguration.PurgeOnStartup(true);
+
 
                 endpointConfiguration.AuditSagaStateChanges(
                     serviceControlQueue: "Particular.Servicecontrol");
@@ -114,6 +139,8 @@ namespace MeasureService.WebApi
                 var conventions = endpointConfiguration.Conventions();
                 conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
                 conventions.DefiningEventsAs(type => type.Namespace == "Messages.Events");
+                conventions.DefiningMessagesAs(type => type.Namespace == "Messages.Messages");
+
 
                 return endpointConfiguration;
             })

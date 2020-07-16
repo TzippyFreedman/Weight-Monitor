@@ -3,6 +3,7 @@ using Messages.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
+using NServiceBus.Persistence.Sql;
 using NServiceBus.Routing;
 using NServiceBus.Transport;
 using Subscriber.Data;
@@ -24,6 +25,9 @@ namespace SubscriberService.Handlers
             Console.Title = endpointName;
 
             var endpointConfiguration = new EndpointConfiguration(endpointName);
+
+            //if in development
+            endpointConfiguration.PurgeOnStartup(true);
 
             var containerSettings = endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
 
@@ -102,9 +106,34 @@ namespace SubscriberService.Handlers
             var conventions = endpointConfiguration.Conventions();
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
             conventions.DefiningEventsAs(type => type.Namespace == "Messages.Events");
+            conventions.DefiningMessagesAs(type => type.Namespace == "Messages.Messages");
+
 
             var recoverability = endpointConfiguration.Recoverability();
             recoverability.CustomPolicy(SubscriberServiceRetryPolicy);
+
+             endpointConfiguration.RegisterComponents(c =>
+            {
+                c.ConfigureComponent(b =>
+                {
+                    var session = b.Build<ISqlStorageSession>();
+
+                    var context = new UserDbContext(new DbContextOptionsBuilder<UserDbContext>()
+                        .UseSqlServer(session.Connection)
+                        .Options);
+
+                    //Use the same underlying ADO.NET transaction
+                    context.Database.UseTransaction(session.Transaction);
+
+                    //Ensure context is flushed before the transaction is committed
+                    session.OnSaveChanges(s => context.SaveChangesAsync());
+
+                    return context;
+
+
+                }, DependencyLifecycle.InstancePerUnitOfWork);
+            });
+
 
             var endpointInstance = await Endpoint.Start(endpointConfiguration)
                 .ConfigureAwait(false);

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeasureService.Data.Migrations
 {
     [DbContext(typeof(MeasureDbContext))]
-    [Migration("20200712165645_typeUpdates")]
-    partial class typeUpdates
+    [Migration("20200714072119_EnumFluentApi")]
+    partial class EnumFluentApi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,8 +36,9 @@ namespace MeasureService.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserFileId")
                         .HasColumnType("uniqueidentifier");

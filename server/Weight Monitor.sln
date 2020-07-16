@@ -21,19 +21,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureService.Data", "Src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages", "Src\Messages\Messages.csproj", "{446110DD-051B-48F8-9A85-A7322D359940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasureService.Handlers", "Src\MeasureService\MeasureService.Handlers\MeasureService.Handlers\MeasureService.Handlers.csproj", "{1B118DBD-BC9B-48FB-AB5C-C4868F6A67FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureService.Handlers", "Src\MeasureService\MeasureService.Handlers\MeasureService.Handlers\MeasureService.Handlers.csproj", "{1B118DBD-BC9B-48FB-AB5C-C4868F6A67FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriberService.Handlers", "Src\Subscriber\SubscriberService.Handlers\SubscriberService.Handlers.csproj", "{A8B90C22-E27B-41E7-A9AB-D5206CABA6A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubscriberService.Handlers", "Src\Subscriber\SubscriberService.Handlers\SubscriberService.Handlers.csproj", "{A8B90C22-E27B-41E7-A9AB-D5206CABA6A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TrackingService", "TrackingService", "{4906BF48-F688-4E53-A0FD-C8A8C2128719}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackingService.WebApi", "Src\TrackingService\TrackingService.WebApi\TrackingService.WebApi.csproj", "{1AA6A875-164B-4EB5-AE75-92632BFB7988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingService.WebApi", "Src\TrackingService\TrackingService.WebApi\TrackingService.WebApi.csproj", "{1AA6A875-164B-4EB5-AE75-92632BFB7988}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackingService.Data", "Src\TrackingService\TrackingService.Data\TrackingService.Data.csproj", "{4DA55AE5-2705-4D19-9C8B-0C77F23E7423}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingService.Data", "Src\TrackingService\TrackingService.Data\TrackingService.Data.csproj", "{4DA55AE5-2705-4D19-9C8B-0C77F23E7423}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackingService.Services", "Src\TrackingService\TrackingService.Services\TrackingService.Services.csproj", "{C57471AB-B1B5-43A8-A2B3-91F58BEC5CB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingService.Services", "Src\TrackingService\TrackingService.Services\TrackingService.Services.csproj", "{C57471AB-B1B5-43A8-A2B3-91F58BEC5CB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackingService.Handlers", "Src\TrackingService\TrackingService.Handlers\TrackingService.Handlers.csproj", "{3CB71091-A6BF-484A-AF76-098FFD84ECA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackingService.Handlers", "Src\TrackingService\TrackingService.Handlers\TrackingService.Handlers.csproj", "{3CB71091-A6BF-484A-AF76-098FFD84ECA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriber.Tests", "Src\Subscriber\Subscriber.Tests\Subscriber.Tests.csproj", "{FC26F86D-836D-4C80-BAB6-449EE829599C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{3CB71091-A6BF-484A-AF76-098FFD84ECA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB71091-A6BF-484A-AF76-098FFD84ECA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB71091-A6BF-484A-AF76-098FFD84ECA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC26F86D-836D-4C80-BAB6-449EE829599C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC26F86D-836D-4C80-BAB6-449EE829599C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC26F86D-836D-4C80-BAB6-449EE829599C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC26F86D-836D-4C80-BAB6-449EE829599C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +116,7 @@ Global
 		{4DA55AE5-2705-4D19-9C8B-0C77F23E7423} = {4906BF48-F688-4E53-A0FD-C8A8C2128719}
 		{C57471AB-B1B5-43A8-A2B3-91F58BEC5CB3} = {4906BF48-F688-4E53-A0FD-C8A8C2128719}
 		{3CB71091-A6BF-484A-AF76-098FFD84ECA4} = {4906BF48-F688-4E53-A0FD-C8A8C2128719}
+		{FC26F86D-836D-4C80-BAB6-449EE829599C} = {CE18469C-ABF2-421C-891A-24ADC3698241}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92F4048F-FFC1-4B24-AF34-60F3B462F3A0}

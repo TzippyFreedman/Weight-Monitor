@@ -5,8 +5,9 @@
 export const environment = {
   production: false,
  baseUrl : "https://localhost:44306/api",
- userComponentUrl:'/user',
- loginComponentUrl:'/login'
+ measureComponentURL:'/measure',
+ userURL:'/user',
+ loginURL:'/login'
 };
 
 /*

@@ -97,7 +97,7 @@ namespace Subscriber.Services
             Guid vertificationCode = Guid.NewGuid();
 /*          await  _userRepository.AddVertificationCodeToUser(emailAddress, vertificationCode);
 */
-            using (MailMessage mail = new MailMessage())
+          /*  using (MailMessage mail = new MailMessage())
             {
                 mail.From = new MailAddress("rivkifreedman1@gmail.com"); //enter whatever email you are sending from here 
                 mail.To.Add(emailAddress); //Text box that the user enters their email address 
@@ -118,7 +118,7 @@ namespace Subscriber.Services
 
 
             }
-
+*/
 
         }
     }

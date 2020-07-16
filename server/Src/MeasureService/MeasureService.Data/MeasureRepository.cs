@@ -50,7 +50,7 @@ namespace MeasureService.Data
 
             measureToUpdate.Status = status;
             measureToUpdate.Comments = comments;
-            await _measureDbContext.SaveChangesAsync();
+            //await _measureDbContext.SaveChangesAsync();
 
         }
 

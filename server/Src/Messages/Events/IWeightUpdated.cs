@@ -9,6 +9,6 @@ namespace Messages.Events
     {
         Guid MeasureId { get; set; }
         float BMI { get; set; }
-        public RequestStatus status { get; set; }
+        public MessageStatus status { get; set; }
     }
 }

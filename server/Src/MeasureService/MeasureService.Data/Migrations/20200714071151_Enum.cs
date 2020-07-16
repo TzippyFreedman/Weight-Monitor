@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MeasureService.Data.Migrations
 {
-    public partial class typeUpdates : Migration
+    public partial class Enum : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,7 @@ namespace MeasureService.Data.Migrations
                     UserFileId = table.Column<Guid>(nullable: false),
                     Weight = table.Column<float>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
-                    Status = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: false),
                     Comments = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

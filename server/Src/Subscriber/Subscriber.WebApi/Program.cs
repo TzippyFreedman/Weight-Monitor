@@ -55,7 +55,7 @@ namespace Subscriber.WebApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                        .UseNServiceBus(context =>
+                      /*  .UseNServiceBus(context =>
                         {
 
                             const string endpointName = "WeightMonitor.Subscriber.Api";
@@ -126,8 +126,8 @@ namespace Subscriber.WebApi
                             var subscriptions = persistence.SubscriptionSettings();
                             subscriptions.CacheFor(TimeSpan.FromMinutes(10));
 
-                          /*  var recoverability = endpointConfiguration.Recoverability();
-                            recoverability.CustomPolicy(SubscriberServiceRetryPolicy);*/
+                          *//*  var recoverability = endpointConfiguration.Recoverability();
+                            recoverability.CustomPolicy(SubscriberServiceRetryPolicy);*//*
 
                             var conventions = endpointConfiguration.Conventions();
                             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
@@ -137,7 +137,7 @@ namespace Subscriber.WebApi
                             return endpointConfiguration;
                         })
 
-                .ConfigureWebHostDefaults(webBuilder =>
+                */.ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });

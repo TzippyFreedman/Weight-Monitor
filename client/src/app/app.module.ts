@@ -9,12 +9,15 @@ import {HttpClientModule} from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component'
 import { RouterModule } from '@angular/router';
+import { AddMeasureComponent } from './add-measure/add-measure.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    UserComponent
+    UserComponent,
+    AddMeasureComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -26,6 +29,7 @@ import { RouterModule } from '@angular/router';
          {path:'register',component:RegisterComponent},
         {path:'login',component:LoginComponent},
         {path:'user/:userFileId',component:UserComponent},
+        {path:'measure',component:AddMeasureComponent},
         {path:"",redirectTo:'/login',pathMatch:"full"}
   ]),
 ],
