@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace MeasureService.WebApi
 {
-    public class MeasureProfile : Profile
+    public class ApiMappingProfile : Profile
     {
-        public MeasureProfile()
+        public ApiMappingProfile()
         {
             CreateMap<MeasureDTO, MeasureModel>();
-            CreateMap<MeasureModel, Measure>()
-                .ReverseMap();
+           /* CreateMap<MeasureModel, Measure>()
+                .ReverseMap();*/
 
         }
        

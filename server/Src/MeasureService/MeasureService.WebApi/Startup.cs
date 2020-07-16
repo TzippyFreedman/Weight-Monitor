@@ -39,7 +39,10 @@ namespace MeasureService.WebApi
               (options => options
               .UseSqlServer(Configuration.GetConnectionString("weightMonitorSubscriberDBConnectionString")));
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(ApiMappingProfile), typeof(DataMappingProfile));
+            //services.AddAutoMapper(typeof(Startup));
+
+
 
             var swaggerTitle = Configuration["AppSettings:Swagger:Title"];
             var swaggerName = Configuration["AppSettings:Swagger:Name"];
