@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MeasureService.Handlers.Services\MeasureService.Handlers.Services.csproj" />
     <ProjectReference Include="..\MeasureService.Services\MeasureService.Services.csproj" />
   </ItemGroup>
 

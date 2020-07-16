@@ -1,4 +1,4 @@
-﻿using MeasureService.Services;
+﻿using MeasureService.Handlers.Services;
 using Messages.Commands;
 using Messages.Enums;
 using Messages.Events;
@@ -13,16 +13,15 @@ namespace MeasureService.Handlers
 {
     class UpdateMeasureStatusHandler : IHandleMessages<IUpdateMeasureStatus>
     {
-        private readonly IMeasureHandlerRepository _measureRopository;
+        private readonly IMeasureHandlersRepository _measureRopository;
 
-        public UpdateMeasureStatusHandler(IMeasureHandlerRepository measureRopository)
+        public UpdateMeasureStatusHandler(IMeasureHandlersRepository measureRopository)
         {
             _measureRopository = measureRopository;
         }
         public async Task Handle(IUpdateMeasureStatus message, IMessageHandlerContext context)
         {
             await _measureRopository.UpdateStatusAsync(message.MeasureId, message.MeasureStatus, message.Comments);
-             // await _measureService.UpdateStatus(message.MeasureId, message.MeasureStatus, message.Comments);
 
             await context.Reply<IUpdateMeasureStatusResponse>(msg =>
             {

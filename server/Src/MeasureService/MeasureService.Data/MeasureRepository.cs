@@ -3,7 +3,6 @@ using MeasureService.Data.Entities;
 using MeasureService.Data.Exceptions;
 using MeasureService.Services;
 using MeasureService.Services.Models;
-using Messages.Enums.MeasureStatus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace MeasureService.Data
             return _mapper.Map<MeasureModel>(measure);
         }
 
-        public async Task UpdateStatusAsync(Guid measureId, MeasureStatus status, string comments)
+/*        public async Task UpdateStatusAsync(Guid measureId, MeasureStatus status, string comments)
         {
             Measure measureToUpdate;
             try
@@ -52,7 +51,7 @@ namespace MeasureService.Data
             measureToUpdate.Comments = comments;
             //await _measureDbContext.SaveChangesAsync();
 
-        }
+        }*/
 
 
     }

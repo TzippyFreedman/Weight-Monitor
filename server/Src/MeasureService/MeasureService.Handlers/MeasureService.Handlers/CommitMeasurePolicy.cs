@@ -5,7 +5,6 @@ using Messages.Enums.MeasureStatus;
 using Messages.Events;
 using Messages.Messages;
 using NServiceBus;
-using SubscriberService.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MeasureService.Handlers
 {
-    public class CommitMeasurePolicy : Saga<CommitMeasurePolicyData>,
+    public class CommitMeasurePolicy : Saga<CommitMeasurePolicy.CommitMeasurePolicyData>,
                IAmStartedByMessages<IMeasureAdded>,
         IHandleMessages<ISendEmailResponse>,
         IHandleMessages<IUpdateWeightResponse>,
@@ -110,6 +109,13 @@ namespace MeasureService.Handlers
                 });
 
             }
+
+        }
+        public class CommitMeasurePolicyData : ContainSagaData
+        {
+            public Guid MeasureId { get; set; }
+            public MessageStatus WeightUpdateStatus { get; set; }
+            public MessageStatus EmailSendStatus { get; set; }
 
         }
 

@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="NServiceBus" Version="7.3.0" />
     <PackageReference Include="NServiceBus.Extensions.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="NServiceBus.Persistence.Sql" Version="6.0.1" />
     <PackageReference Include="NServiceBus.RabbitMQ" Version="5.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
@@ -15,9 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Messages\Messages.csproj" />
-    <ProjectReference Include="..\..\..\Subscriber\SubscriberService.Handlers\SubscriberService.Handlers.csproj" />
     <ProjectReference Include="..\..\MeasureService.Data\MeasureService.Data.csproj" />
-    <ProjectReference Include="..\..\MeasureService.Services\MeasureService.Services.csproj" />
   </ItemGroup>
 
 </Project>

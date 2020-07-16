@@ -9,7 +9,7 @@ namespace MeasureService.Services
 {
     public interface IMeasureRepository
     {
-        Task UpdateStatusAsync(Guid measureId, MeasureStatus status, string comments);
+      //  Task UpdateStatusAsync(Guid measureId, MeasureStatus status, string comments);
         Task<MeasureModel> Add(MeasureModel measure);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using MeasureService.Data.Entities;
-using Messages.Enums.MeasureStatus;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

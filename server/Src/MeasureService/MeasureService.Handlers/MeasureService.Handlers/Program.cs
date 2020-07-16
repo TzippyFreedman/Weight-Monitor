@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MeasureService.Data;
-using MeasureService.Services;
+using MeasureService.Handlers.Services;
 using Messages.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,8 +31,7 @@ namespace MeasureService.Handlers
             //endpointConfiguration.AuditProcessedMessagesTo("audit");
             var containerSettings = endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
 
-            containerSettings.ServiceCollection.AddScoped(typeof(IMeasureService), typeof(MeasureService.Services.MeasureService));
-            containerSettings.ServiceCollection.AddScoped(typeof(IMeasureRepository), typeof(MeasureRepository));
+            containerSettings.ServiceCollection.AddScoped(typeof(IMeasureHandlersRepository), typeof(MeasureHandlerRepository));
 
             containerSettings.ServiceCollection.AddAutoMapper(typeof(Program));
 

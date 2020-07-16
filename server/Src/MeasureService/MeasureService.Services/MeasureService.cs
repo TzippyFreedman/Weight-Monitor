@@ -27,35 +27,12 @@ namespace MeasureService.Services
 
             return newMeasureModel;
 
-           /* await _messageSession.Send<IUpdateUserFile>(message =>
-              {
-                  message.MeasureId = newMeasureModel.Id;
-                  message.Weight = measure.Weight;
-                  message.UserFileId = measure.UserFileId;
-              });*/
-
-
-
-
-            /* await  _messageSession.Send<IUpdateUser>(message =>
-               {
-                   message.MeasureId = measure.Id;
-                   message.Weight = measure.Weight;
-                   message.UserFileId = measure.UserFileId;
-               });
-
-               await _messageSession.Publish<IMeasureUpdated>(message =>
-               {
-                   message.MeasureId = newMeasureModel.Id;
-                   message.UserFileId = newMeasureModel.UserFileId;
-                   message.Weight = newMeasureModel.Weight;
-               });*/
         }
 
-        public async Task UpdateStatus(Guid measureId, MeasureStatus status, string comments)
+/*        public async Task UpdateStatus(Guid measureId, MeasureStatus status, string comments)
         {
             await _measureRepository.UpdateStatusAsync(measureId, status, comments);
 
-        }
+        }*/
     }
 }

@@ -25,16 +25,13 @@ export class AddMeasureComponent implements OnInit {
   
 ngOnInit(): void {
   this.measureForm = new FormGroup({
-    'weight': new FormControl('',[
-    Validators.required, 
-    Validators.min(1),
-    this.weightValidator()])
+    'weight': new FormControl('',
+    this.weightValidator())
 });
 }
 
 weightValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    debugger;
 const weight = control.value;
  return (weight< this.MIN_WEIGHT || weight> this.MAX_WEIGHT) ? { 'forbiddenWeight': true }: null;
   }

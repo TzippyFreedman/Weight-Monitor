@@ -1,6 +1,6 @@
 ﻿using MeasureService.Data.Entities;
 using MeasureService.Data.Exceptions;
-using MeasureService.Handlers;
+using MeasureService.Handlers.Services;
 using Messages.Enums.MeasureStatus;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MeasureService.Data
 {
-    public class MeasureHandlerRepository : IMeasureHandlerRepository
+    public class MeasureHandlerRepository : IMeasureHandlersRepository
     {
         private readonly MeasureDbContext _measureDbContext;
 
