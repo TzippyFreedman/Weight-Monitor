@@ -19,6 +19,9 @@ namespace MeasureService.Data
             modelBuilder.Entity<Measure>()
                           .ToTable("Measure");
             modelBuilder.Entity<Measure>()
+                        .HasIndex(measure => measure.Id);
+
+            modelBuilder.Entity<Measure>()
                         .Property(measure => measure.Status)
                         .HasConversion<string>();
             modelBuilder.Entity<Measure>()

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
 using NServiceBus.Persistence.Sql;
-using NServiceBus.Routing;
 using NServiceBus.Transport;
 using Subscriber.Data;
 using Subscriber.Data.Exceptions;
@@ -41,12 +40,14 @@ namespace SubscriberService.Handlers
                .UseSqlServer(ConfigurationManager.ConnectionStrings["weightMonitorSubscriberDBConnectionString"].ToString()));
 
             var appSettings = ConfigurationManager.AppSettings;
+
             var auditQueue = appSettings.Get("auditQueue");
             var serviceControlQueue = appSettings.Get("ServiceControlQueue");
-
             var measureEndpoint = appSettings.Get("MeasureEndpoint");
             var trackingEndpoint = appSettings.Get("TrackingEndpoint");
             var timeToBeReceivedSetting = appSettings.Get("timeToBeReceived");
+
+
             var timeToBeReceived = TimeSpan.Parse(timeToBeReceivedSetting);
             endpointConfiguration.AuditProcessedMessagesTo(
                 auditQueue: auditQueue,
@@ -54,7 +55,6 @@ namespace SubscriberService.Handlers
 
             endpointConfiguration.EnableInstallers();
 
-            //endpointConfiguration.AuditProcessedMessagesTo("audit");
 
             /* endpointConfiguration.AuditSagaStateChanges(
                        serviceControlQueue: serviceControlQueue);*/
@@ -104,6 +104,7 @@ namespace SubscriberService.Handlers
                 destination: measureEndpoint);
 
             var conventions = endpointConfiguration.Conventions();
+
             conventions.DefiningCommandsAs(type => type.Namespace == "Messages.Commands");
             conventions.DefiningEventsAs(type => type.Namespace == "Messages.Events");
             conventions.DefiningMessagesAs(type => type.Namespace == "Messages.Messages");

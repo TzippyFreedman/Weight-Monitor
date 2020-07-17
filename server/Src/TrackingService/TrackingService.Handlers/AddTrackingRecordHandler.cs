@@ -1,24 +1,16 @@
 ﻿using Messages.Commands;
-using Messages.Enums;
-using Messages.Events;
-using Messages.Messages;
 using Microsoft.EntityFrameworkCore;
 using NServiceBus;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TrackingService.Data;
 using TrackingService.Data.Entities;
-using TrackingService.Services;
-using TrackingService.Services.Models;
 
 namespace TrackingService.Handlers
 {
     public class AddTrackingRecordHandler : IHandleMessages<IAddTrackingRecord>
     {
-        private readonly ITrackingService _trackingService;
         private readonly RecordDbContext _recordDbContext;
 
         public AddTrackingRecordHandler(RecordDbContext recordDbContext)
@@ -54,17 +46,6 @@ namespace TrackingService.Handlers
             }
 
             record.Trend = trend;
-
-            //Record record = _mapper.Map<Record>(newRecord);
-            _recordDbContext.Records.Add(record);
-            //await _recordDbContext.SaveChangesAsync();
-            //await _trackingRepository.Add(record);
-            //await _trackingService.AddTrackingRecord(record);
-
-            //throw new Exception();
-
-
-
 
         }
     }
